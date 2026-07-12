@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FluxGet (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "FluxGet (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

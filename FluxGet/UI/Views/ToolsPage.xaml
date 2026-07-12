@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="FluxGet.UI.Views.ToolsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="32,20,32,20" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+                <FontIcon Glyph="&#xE74E;" FontSize="28" VerticalAlignment="Center"/>
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Araclar" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="YouTube indirme ve donusturme araclarini yonetin"
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- yt-dlp -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                    <FontIcon Glyph="&#xE714;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="yt-dlp" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="YouTube Video Indirme Motoru" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="YouTube, Vimeo ve diger video sitelerinden indirme destegi" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" x:Name="YtDlpStatusText" Text="Kontrol ediliyor..."
+                                       FontSize="12" VerticalAlignment="Center" FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </Grid>
+                        <TextBlock x:Name="YtDlpPathText" FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock x:Name="YtDlpVersionText" FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                   Visibility="Collapsed"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button x:Name="YtDlpSelectButton" Content="Dosya Sec" Click="YtDlpSelectButton_Click"
+                                    Padding="12,6"/>
+                            <Button Content="Indir (GitHub)" Click="YtDlpDownloadButton_Click"
+                                    Padding="12,6"/>
+                            <Button x:Name="YtDlpCheckUpdateButton" Content="Yeni Surum var mi?"
+                                    Click="YtDlpCheckUpdateButton_Click" Padding="12,6"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ffmpeg -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
+                    <FontIcon Glyph="&#xE8D6;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="ffmpeg" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Ses Donusturme Araci" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="YouTube videolarindan MP3 ses dosyasi olusturma" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" x:Name="FfmpegStatusText" Text="Kontrol ediliyor..."
+                                       FontSize="12" VerticalAlignment="Center" FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </Grid>
+                        <TextBlock x:Name="FfmpegPathText" FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock x:Name="FfmpegVersionText" FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                   Visibility="Collapsed"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button x:Name="FfmpegSelectButton" Content="Dosya Sec" Click="FfmpegSelectButton_Click"
+                                    Padding="12,6"/>
+                            <Button Content="Indir (GitHub)" Click="FfmpegDownloadButton_Click"
+                                    Padding="12,6"/>
+                            <Button x:Name="FfmpegCheckUpdateButton" Content="Yeni Surum var mi?"
+                                    Click="FfmpegCheckUpdateButton_Click" Padding="12,6"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Aracl Klasoru -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
+                    <FontIcon Glyph="&#xE8B7;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="Aracl Klasoru" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Aracl Dosyalari Konumu" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="yt-dlp ve ffmpeg dosyalarinin saklandigi klasor" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="Klasoru Ac" Click="OpenToolsFolderButton_Click"
+                                Padding="12,4" Margin="12,0,0,0"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

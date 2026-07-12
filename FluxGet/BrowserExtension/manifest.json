@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "name": "FluxGet",
+  "version": "2.0.0",
+  "description": "FluxGet Indirme Yoneticisi tarayici eklentisi",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "contextMenus",
+    "storage",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "http://localhost:19874/*",
+    "https://www.youtube.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "context_menus": [
+    {
+      "id": "download-with-fluxget",
+      "title": "FluxGet ile Indir",
+      "contexts": ["link", "image", "video", "audio"]
+    },
+    {
+      "id": "download-video-with-fluxget",
+      "title": "Videoyu FluxGet ile Indir",
+      "contexts": ["video"]
+    },
+    {
+      "id": "download-image-with-fluxget",
+      "title": "Gorseli FluxGet ile Indir",
+      "contexts": ["image"]
+    },
+    {
+      "id": "download-page-with-fluxget",
+      "title": "Sayfadaki tum linkleri indir",
+      "contexts": ["page"]
+    },
+    {
+      "id": "download-selected-with-fluxget",
+      "title": "Secileni FluxGet ile Indir",
+      "contexts": ["selection"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="FluxGet.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="FluxGet">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <NavigationView x:Name="NavView"
+                        PaneDisplayMode="Left"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        IsTitleBarAutoPaddingEnabled="False"
+                        SelectionChanged="NavView_SelectionChanged"
+                        OpenPaneLength="240"
+                        CompactPaneLength="52"
+                        Background="Transparent"
+                        IsPaneOpen="True">
+
+
+            <NavigationView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid/>
+                </DataTemplate>
+            </NavigationView.HeaderTemplate>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Giris" Tag="Dashboard">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE80F;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Indirmeler" Tag="Downloads">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE896;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Kuyruk" Tag="Queue">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8A7;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="YouTube" Tag="YouTube">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE714;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Araclar" Tag="Tools">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE74E;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Ayarlar" Tag="Settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Hakkinda" Tag="About">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE946;" FontSize="20"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+
+            <Grid AllowDrop="True" DragOver="Grid_DragOver" Drop="Grid_Drop">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="AppTitleBar" Grid.Row="0" Height="32" Background="Transparent"/>
+
+                <Frame x:Name="ContentFrame" Grid.Row="1" Navigated="ContentFrame_Navigated"/>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>

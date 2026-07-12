@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="FluxGet.UI.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24,16,24,16" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+            
+            <!-- Header -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <FontIcon Glyph="&#xE80F;" FontSize="28" VerticalAlignment="Center"/>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="FluxGet" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="Indirme yoneticiniz - Hizli, guvenilir, akillica"
+                                   FontSize="12"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <Button Grid.Column="1"
+                        Style="{StaticResource AccentButtonStyle}"
+                        VerticalAlignment="Top" Padding="12,6"
+                        Click="RefreshButton_Click">
+                    <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                    <ToolTipService.ToolTip><ToolTip Content="Yenile"/></ToolTipService.ToolTip>
+                </Button>
+            </Grid>
+
+            <!-- Clipboard Banner (gizli varsayilan) -->
+            <Border x:Name="ClipboardBanner" Visibility="Collapsed" CornerRadius="10"
+                    Padding="16,12" Margin="0,0,0,4"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="#4cc764" BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <FontIcon Grid.Column="0" Glyph="&#xE8A7;" FontSize="20" Foreground="#4cc764" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="Panoda URL algilandi" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="ClipboardUrlText" Text="" FontSize="11" TextTrimming="CharacterEllipsis"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" MaxLines="1"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="ClipboardDownloadButton" Content="Indir" Padding="16,6"
+                                Style="{StaticResource AccentButtonStyle}" Click="ClipboardDownloadButton_Click"/>
+                        <Button x:Name="ClipboardDismissButton" Padding="8,6"
+                                Click="ClipboardDismissButton_Click">
+                            <FontIcon Glyph="&#xE711;" FontSize="12"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Stats Cards -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Toplam Indirme -->
+                <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{ThemeResource SystemControlHighlightAccentBrush}"
+                                CornerRadius="12,0,0,12"/>
+                        <StackPanel Grid.Column="1" Padding="16,14">
+                            <TextBlock Text="Toplam" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock x:Name="TotalCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
+                            <TextBlock x:Name="TotalCountSubText" Text="indirme" FontSize="10"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Aktif -->
+                <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#60cdff" CornerRadius="12,0,0,12"/>
+                        <StackPanel Grid.Column="1" Padding="16,14">
+                            <TextBlock Text="Aktif" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock x:Name="ActiveCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
+                            <TextBlock Text="devam ediyor" FontSize="10"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Tamamlanan -->
+                <Border Grid.Column="2" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#4cc764" CornerRadius="12,0,0,12"/>
+                        <StackPanel Grid.Column="1" Padding="16,14">
+                            <TextBlock Text="Tamamlanan" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock x:Name="CompletedCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
+                            <TextBlock Text="basarili" FontSize="10"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Hiz -->
+                <Border Grid.Column="3" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#ffb347" CornerRadius="12,0,0,12"/>
+                        <StackPanel Grid.Column="1" Padding="16,14">
+                            <TextBlock Text="Hiz" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock x:Name="TotalSpeedText" Text="0 B/s" FontSize="22" FontWeight="SemiBold" Margin="0,2,0,0"/>
+                            <TextBlock Text="anlik" FontSize="10"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Cift Kolon: Son Indirmeler + Aktif -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Son Indirmeler -->
+                <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0,0,0,8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Padding="16,12,16,10"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="0,0,0,1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE896;" FontSize="14" VerticalAlignment="Center"/>
+                                <TextBlock Text="Son Indirmeler" FontSize="13" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ListView Grid.Row="1" x:Name="RecentDownloadsList"
+                                  SelectionMode="None" Padding="8,4,8,4"
+                                  ScrollViewer.HorizontalScrollMode="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="12,10" Margin="0,0,0,2"
+                                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                          CornerRadius="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Grid.Column="0" Glyph="{Binding CategoryIcon}" FontSize="16"
+                                                  VerticalAlignment="Center" Margin="0,0,12,0"
+                                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding FileName}" FontSize="13"
+                                                       TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                            <TextBlock Text="{Binding SizeText}" FontSize="11"
+                                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                                       Margin="0,2,0,0"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="2" Padding="8,4" CornerRadius="6"
+                                                Background="{ThemeResource LayerFillColorDefaultBrush}">
+                                            <TextBlock Text="{Binding StatusText}" FontSize="10"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <StackPanel x:Name="EmptyDownloadsPanel" Grid.Row="1"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <FontIcon Glyph="&#xE896;" FontSize="36" HorizontalAlignment="Center"
+                                      Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <TextBlock Text="Henuz indirme yok" FontSize="14" HorizontalAlignment="Center"
+                                       Margin="0,12,0,4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="'Yeni Indirme' ile baslayin" FontSize="11"
+                                       HorizontalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Aktif Indirmeler -->
+                <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                        CornerRadius="12" Padding="0,0,0,8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Padding="16,12,16,10"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="0,0,0,1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE945;" FontSize="14" VerticalAlignment="Center" Foreground="#60cdff"/>
+                                <TextBlock Text="Aktif Indirmeler" FontSize="13" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ListView Grid.Row="1" x:Name="ActiveDownloadsList"
+                                  SelectionMode="None" Padding="8,4,8,4"
+                                  ScrollViewer.HorizontalScrollMode="Disabled">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="12,10" Margin="0,0,0,2"
+                                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                          CornerRadius="8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding FileName}" FontSize="13"
+                                                       TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding SpeedText}" FontSize="11"
+                                                       Foreground="#60cdff"/>
+                                        </Grid>
+
+                                        <ProgressBar Grid.Row="1" Value="{Binding Progress}" Maximum="100"
+                                                     Height="4" Margin="0,6,0,0" Foreground="#60cdff"/>
+
+                                        <Grid Grid.Row="2" Margin="0,4,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding SizeText}" FontSize="11"
+                                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding EtaText}" FontSize="11"
+                                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <StackPanel x:Name="EmptyActivePanel" Grid.Row="1"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <FontIcon Glyph="&#xE945;" FontSize="36" HorizontalAlignment="Center"
+                                      Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <TextBlock Text="Aktif indirme yok" FontSize="14" HorizontalAlignment="Center"
+                                       Margin="0,12,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Tamamlanan Son 5 -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="12" Padding="0,0,0,8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Padding="16,12,16,10"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE8FB;" FontSize="14" VerticalAlignment="Center" Foreground="#4cc764"/>
+                            <TextBlock Text="Tamamlanan" FontSize="13" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <ListView Grid.Row="1" x:Name="CompletedDownloadsList"
+                              SelectionMode="None" Padding="8,4,8,4"
+                              ScrollViewer.HorizontalScrollMode="Disabled">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="12,10" Margin="0,0,0,2"
+                                      Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                      CornerRadius="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <FontIcon Grid.Column="0" Glyph="{Binding CategoryIcon}" FontSize="16"
+                                              VerticalAlignment="Center" Margin="0,0,12,0"
+                                              Foreground="#4cc764"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding FileName}" FontSize="13"
+                                                   TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                        <TextBlock Text="{Binding SizeText}" FontSize="11"
+                                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                                   Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <Border Grid.Column="2" Padding="8,4" CornerRadius="6"
+                                            Background="#1a3c1a">
+                                        <TextBlock Text="Tamamlandi" FontSize="10" Foreground="#4cc764"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackPanel x:Name="EmptyCompletedPanel" Grid.Row="1"
+                                VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE8FB;" FontSize="36" HorizontalAlignment="Center"
+                                  Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                        <TextBlock Text="Tamamlanan indirme yok" FontSize="14" HorizontalAlignment="Center"
+                                   Margin="0,12,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Quick Actions -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="12" Padding="16,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button Content="Yeni Indirme" Style="{StaticResource AccentButtonStyle}"
+                                Click="NewDownloadButton_Click" Padding="16,8"/>
+                        <Button Content="Tumunu Durdur" Click="PauseAllButton_Click"
+                                Padding="16,8"/>
+                        <Button Content="Tumunu Devam Ettir" Click="ResumeAllButton_Click"
+                                Padding="16,8"/>
+                        <Button Content="Tamamlananlari Temizle" Click="ClearCompletedButton_Click"
+                                Padding="16,8"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Padding="10,6" CornerRadius="8"
+                            Background="{ThemeResource LayerFillColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <Border Width="8" Height="8" CornerRadius="4" Background="#4cc764"/>
+                            <TextBlock Text="Tarayici eklentisi baglandi"
+                                       FontSize="11" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

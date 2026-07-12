@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="FluxGet.UI.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="32,20,32,20" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+
+            <!-- Header -->
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+                <FontIcon Glyph="&#xE713;" FontSize="28" VerticalAlignment="Center"/>
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Ayarlar" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="Uygulama tercihlerini yapilandirin"
+                               FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Genel Ayarlar -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                    <FontIcon Glyph="&#xE713;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="Genel" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Varsayilan Indirme Konumu" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Indirilen dosyalarin kaydedilecegi klasor" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Gozat..."
+                                    Margin="12,0,0,0" Click="BrowseButton_Click"/>
+                        </Grid>
+                        <TextBlock x:Name="PathText" Text="{Binding DefaultDownloadPath}"
+                                   FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                   TextTrimming="CharacterEllipsis" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Otomatik Indirme" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Yeni indirmeleri otomatik olarak baslat" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" IsOn="{Binding IsAutoStartDownloads, Mode=TwoWay}"
+                                      OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Bildirimler" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Indirme tamamlaninca bildirim goster" FontSize="11"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" IsOn="{Binding IsShowNotifications, Mode=TwoWay}"
+                                      OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Indirme Ayarlari -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
+                    <FontIcon Glyph="&#xE896;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="Indirmeler" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Eş Zamanli Maks Indirme" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Ayni anda kac indirme yapilabilecegi" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" x:Name="ConcurrentText"
+                                       Text="{Binding MaxConcurrentDownloads}" FontSize="16" FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                        <Slider x:Name="ConcurrentSlider" Minimum="1" Maximum="20"
+                                Value="{Binding MaxConcurrentDownloads, Mode=TwoWay}"
+                                StepFrequency="1" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Kuresel Hiz Limiti" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Tum indirmeler icin genel hiz siniri (KB/s)" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" x:Name="SpeedLimitText" Text="Sinirsiz"
+                                       FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Slider x:Name="SpeedLimitSlider" Minimum="0" Maximum="10240"
+                                Value="{Binding GlobalSpeedLimit, Mode=TwoWay}"
+                                StepFrequency="100" ValueChanged="SpeedLimitSlider_ValueChanged"
+                                Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Tarayici Eklentisi -->
+            <StackPanel Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
+                    <FontIcon Glyph="&#xE774;" FontSize="16" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tarayici Eklentisi" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                        CornerRadius="10" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Tarayici Eklentisini Etkinlestir" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Tarayicidan dogrudan indirme ekleme destegi" FontSize="11"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" IsOn="{Binding IsBrowserExtensionEnabled, Mode=TwoWay}"
+                                          OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock x:Name="ExtensionStatusText"
+                                   Text="{Binding ExtensionStatus, FallbackValue='Durum: Bilinmiyor'}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Margin="0,8,0,0" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Aksiyonlar -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="10" Padding="16" Margin="0,8,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                        <Button Content="Varsayilanlara Don" Click="ResetDefaultsButton_Click"/>
+                        <Button Content="Kaydet" Style="{StaticResource AccentButtonStyle}" Click="SaveButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
