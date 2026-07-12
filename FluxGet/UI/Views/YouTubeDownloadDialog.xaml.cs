@@ -36,7 +36,7 @@ public sealed partial class YouTubeDownloadDialog : Page
             
             if (!_videoInfo.IsAvailable)
             {
-                ErrorText.Text = "Video bilgisi alinamadi. URL'yi kontrol edin.";
+                ErrorText.Text = "Video info could not be retrieved. Please check the URL.";
                 ErrorText.Visibility = Visibility.Visible;
                 LoadingPanel.Visibility = Visibility.Collapsed;
                 return;
@@ -79,7 +79,7 @@ public sealed partial class YouTubeDownloadDialog : Page
                 {
                     FormatId = bestAudio.FormatId,
                     Extension = "mp3",
-                    Resolution = "Sadece Ses",
+                    Resolution = "Audio Only",
                     FileSize = bestAudio.FileSize,
                     VCodec = "none",
                     ACodec = bestAudio.ACodec
@@ -87,7 +87,7 @@ public sealed partial class YouTubeDownloadDialog : Page
                 
                 var rb = new RadioButton
                 {
-                    Content = $"MP3 - Sadece Ses ({FormatBytes(mp3Format.FileSize)})",
+                    Content = $"MP3 - Audio Only ({FormatBytes(mp3Format.FileSize)})",
                     Tag = mp3Format,
                     Margin = new Thickness(0, 4, 0, 4)
                 };
@@ -104,7 +104,7 @@ public sealed partial class YouTubeDownloadDialog : Page
         }
         catch (Exception ex)
         {
-            ErrorText.Text = $"Hata: {ex.Message}";
+            ErrorText.Text = $"Error: {ex.Message}";
             ErrorText.Visibility = Visibility.Visible;
             LoadingPanel.Visibility = Visibility.Collapsed;
         }
@@ -136,7 +136,7 @@ public sealed partial class YouTubeDownloadDialog : Page
     
     private static string FormatBytes(long bytes) => bytes switch
     {
-        <= 0 => "Bilinmiyor",
+        <= 0 => "Unknown",
         < 1024 => $"{bytes} B",
         < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
         < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",

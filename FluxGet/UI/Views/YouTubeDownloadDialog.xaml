@@ -12,7 +12,7 @@
         <!-- Loading -->
         <StackPanel x:Name="LoadingPanel" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
             <ProgressRing x:Name="LoadingRing" IsActive="True" Width="48" Height="48"/>
-            <TextBlock x:Name="LoadingText" Text="YouTube video bilgisi aliniyor..."
+            <TextBlock x:Name="LoadingText" Text="Fetching YouTube video info..."
                        HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
         
@@ -34,7 +34,7 @@
             </Grid>
             
             <!-- Format Secimi -->
-            <TextBlock Text="Format Sec" FontSize="14" FontWeight="SemiBold" Margin="0,8,0,0"/>
+            <TextBlock Text="Select Format" FontSize="14" FontWeight="SemiBold" Margin="0,8,0,0"/>
             
             <RadioButtons x:Name="FormatRadioButtons" SelectionChanged="FormatRadioButtons_SelectionChanged">
                 <!-- MP4 secenekleri -->
@@ -48,7 +48,7 @@
             
             <!-- Kaydet yolu -->
             <StackPanel Spacing="4" Margin="0,8,0,0">
-                <TextBlock Text="Kaydet Konumu" FontSize="13" FontWeight="SemiBold"/>
+                <TextBlock Text="Save Location" FontSize="13" FontWeight="SemiBold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -57,7 +57,7 @@
                     <TextBlock Grid.Column="0" x:Name="PathText" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                                FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                VerticalAlignment="Center"/>
-                    <Button Grid.Column="1" Content="Degistir" Click="ChangePathButton_Click" Margin="8,0,0,0"/>
+                    <Button Grid.Column="1" Content="Change" Click="ChangePathButton_Click" Margin="8,0,0,0"/>
                 </Grid>
             </StackPanel>
             

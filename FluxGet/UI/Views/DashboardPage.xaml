@@ -26,7 +26,7 @@
                     <FontIcon Glyph="&#xE80F;" FontSize="28" VerticalAlignment="Center"/>
                     <StackPanel Spacing="4">
                         <TextBlock Text="FluxGet" FontSize="28" FontWeight="SemiBold"/>
-                        <TextBlock Text="Indirme yoneticiniz - Hizli, guvenilir, akillica"
+                        <TextBlock Text="Your download manager - Fast, reliable, smart"
                                    FontSize="12"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
@@ -37,7 +37,7 @@
                         VerticalAlignment="Top" Padding="12,6"
                         Click="RefreshButton_Click">
                     <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                    <ToolTipService.ToolTip><ToolTip Content="Yenile"/></ToolTipService.ToolTip>
+                    <ToolTipService.ToolTip><ToolTip Content="Refresh"/></ToolTipService.ToolTip>
                 </Button>
             </Grid>
 
@@ -54,12 +54,12 @@
                     </Grid.ColumnDefinitions>
                     <FontIcon Grid.Column="0" Glyph="&#xE8A7;" FontSize="20" Foreground="#4cc764" Margin="0,0,12,0" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="Panoda URL algilandi" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="URL detected in clipboard" FontSize="13" FontWeight="SemiBold"/>
                         <TextBlock x:Name="ClipboardUrlText" Text="" FontSize="11" TextTrimming="CharacterEllipsis"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" MaxLines="1"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="ClipboardDownloadButton" Content="Indir" Padding="16,6"
+                        <Button x:Name="ClipboardDownloadButton" Content="Download" Padding="16,6"
                                 Style="{StaticResource AccentButtonStyle}" Click="ClipboardDownloadButton_Click"/>
                         <Button x:Name="ClipboardDismissButton" Padding="8,6"
                                 Click="ClipboardDismissButton_Click">
@@ -78,7 +78,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Toplam Indirme -->
+                <!-- Total Downloads -->
                 <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0">
@@ -90,16 +90,16 @@
                         <Border Grid.Column="0" Background="{ThemeResource SystemControlHighlightAccentBrush}"
                                 CornerRadius="12,0,0,12"/>
                         <StackPanel Grid.Column="1" Padding="16,14">
-                            <TextBlock Text="Toplam" FontSize="11"
+                            <TextBlock Text="Total" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <TextBlock x:Name="TotalCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
-                            <TextBlock x:Name="TotalCountSubText" Text="indirme" FontSize="10"
+                            <TextBlock x:Name="TotalCountSubText" Text="downloads" FontSize="10"
                                        Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Aktif -->
+                <!-- Active -->
                 <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0">
@@ -110,16 +110,16 @@
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Background="#60cdff" CornerRadius="12,0,0,12"/>
                         <StackPanel Grid.Column="1" Padding="16,14">
-                            <TextBlock Text="Aktif" FontSize="11"
+                            <TextBlock Text="Active" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <TextBlock x:Name="ActiveCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
-                            <TextBlock Text="devam ediyor" FontSize="10"
+                            <TextBlock Text="in progress" FontSize="10"
                                        Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Tamamlanan -->
+                <!-- Completed -->
                 <Border Grid.Column="2" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0">
@@ -130,16 +130,16 @@
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Background="#4cc764" CornerRadius="12,0,0,12"/>
                         <StackPanel Grid.Column="1" Padding="16,14">
-                            <TextBlock Text="Tamamlanan" FontSize="11"
+                            <TextBlock Text="Completed" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <TextBlock x:Name="CompletedCountText" Text="0" FontSize="28" FontWeight="Bold" Margin="0,2,0,0"/>
-                            <TextBlock Text="basarili" FontSize="10"
+                            <TextBlock Text="successful" FontSize="10"
                                        Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Hiz -->
+                <!-- Speed -->
                 <Border Grid.Column="3" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0">
@@ -150,24 +150,24 @@
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Background="#ffb347" CornerRadius="12,0,0,12"/>
                         <StackPanel Grid.Column="1" Padding="16,14">
-                            <TextBlock Text="Hiz" FontSize="11"
+                            <TextBlock Text="Speed" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <TextBlock x:Name="TotalSpeedText" Text="0 B/s" FontSize="22" FontWeight="SemiBold" Margin="0,2,0,0"/>
-                            <TextBlock Text="anlik" FontSize="10"
+                            <TextBlock Text="instant" FontSize="10"
                                        Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
             </Grid>
 
-            <!-- Cift Kolon: Son Indirmeler + Aktif -->
+            <!-- Two Column: Recent Downloads + Active -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Son Indirmeler -->
+                <!-- Recent Downloads -->
                 <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0,0,0,8">
@@ -182,7 +182,7 @@
                                 BorderThickness="0,0,0,1">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE896;" FontSize="14" VerticalAlignment="Center"/>
-                                <TextBlock Text="Son Indirmeler" FontSize="13" FontWeight="SemiBold"
+                                <TextBlock Text="Recent Downloads" FontSize="13" FontWeight="SemiBold"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
@@ -227,16 +227,16 @@
                                     VerticalAlignment="Center" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE896;" FontSize="36" HorizontalAlignment="Center"
                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                            <TextBlock Text="Henuz indirme yok" FontSize="14" HorizontalAlignment="Center"
+                            <TextBlock Text="No downloads yet" FontSize="14" HorizontalAlignment="Center"
                                        Margin="0,12,0,4" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Text="'Yeni Indirme' ile baslayin" FontSize="11"
+                            <TextBlock Text="Start with 'New Download'" FontSize="11"
                                        HorizontalAlignment="Center"
                                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Aktif Indirmeler -->
+                <!-- Active Downloads -->
                 <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                         CornerRadius="12" Padding="0,0,0,8">
@@ -251,7 +251,7 @@
                                 BorderThickness="0,0,0,1">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <FontIcon Glyph="&#xE945;" FontSize="14" VerticalAlignment="Center" Foreground="#60cdff"/>
-                                <TextBlock Text="Aktif Indirmeler" FontSize="13" FontWeight="SemiBold"
+                                <TextBlock Text="Active Downloads" FontSize="13" FontWeight="SemiBold"
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
@@ -303,14 +303,14 @@
                                     VerticalAlignment="Center" HorizontalAlignment="Center">
                             <FontIcon Glyph="&#xE945;" FontSize="36" HorizontalAlignment="Center"
                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                            <TextBlock Text="Aktif indirme yok" FontSize="14" HorizontalAlignment="Center"
+                            <TextBlock Text="No active downloads" FontSize="14" HorizontalAlignment="Center"
                                        Margin="0,12,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                     </Grid>
                 </Border>
             </Grid>
 
-            <!-- Tamamlanan Son 5 -->
+            <!-- Last 5 Completed -->
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="0,0,0,8">
@@ -325,7 +325,7 @@
                             BorderThickness="0,0,0,1">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xE8FB;" FontSize="14" VerticalAlignment="Center" Foreground="#4cc764"/>
-                            <TextBlock Text="Tamamlanan" FontSize="13" FontWeight="SemiBold"
+                            <TextBlock Text="Completed" FontSize="13" FontWeight="SemiBold"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -358,7 +358,7 @@
 
                                     <Border Grid.Column="2" Padding="8,4" CornerRadius="6"
                                             Background="#1a3c1a">
-                                        <TextBlock Text="Tamamlandi" FontSize="10" Foreground="#4cc764"/>
+                                        <TextBlock Text="Completed" FontSize="10" Foreground="#4cc764"/>
                                     </Border>
                                 </Grid>
                             </DataTemplate>
@@ -369,7 +369,7 @@
                                 VerticalAlignment="Center" HorizontalAlignment="Center">
                         <FontIcon Glyph="&#xE8FB;" FontSize="36" HorizontalAlignment="Center"
                                   Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                        <TextBlock Text="Tamamlanan indirme yok" FontSize="14" HorizontalAlignment="Center"
+                        <TextBlock Text="No completed downloads" FontSize="14" HorizontalAlignment="Center"
                                    Margin="0,12,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Grid>
@@ -386,13 +386,13 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <Button Content="Yeni Indirme" Style="{StaticResource AccentButtonStyle}"
+                        <Button Content="New Download" Style="{StaticResource AccentButtonStyle}"
                                 Click="NewDownloadButton_Click" Padding="16,8"/>
-                        <Button Content="Tumunu Durdur" Click="PauseAllButton_Click"
+                        <Button Content="Pause All" Click="PauseAllButton_Click"
                                 Padding="16,8"/>
-                        <Button Content="Tumunu Devam Ettir" Click="ResumeAllButton_Click"
+                        <Button Content="Resume All" Click="ResumeAllButton_Click"
                                 Padding="16,8"/>
-                        <Button Content="Tamamlananlari Temizle" Click="ClearCompletedButton_Click"
+                        <Button Content="Clear Completed" Click="ClearCompletedButton_Click"
                                 Padding="16,8"/>
                     </StackPanel>
 
@@ -400,7 +400,7 @@
                             Background="{ThemeResource LayerFillColorDefaultBrush}">
                         <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
                             <Border Width="8" Height="8" CornerRadius="4" Background="#4cc764"/>
-                            <TextBlock Text="Tarayici eklentisi baglandi"
+                            <TextBlock Text="Browser extension connected"
                                        FontSize="11" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>

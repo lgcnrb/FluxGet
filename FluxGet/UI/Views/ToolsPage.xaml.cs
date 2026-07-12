@@ -61,18 +61,18 @@ public sealed partial class ToolsPage : Page
     
     private async Task RefreshToolsStatusAsync()
     {
-        // yt-dlp durumu
+        // yt-dlp status
         var ytdlpPath = _settingsService.YtDlpPath;
         if (IsToolValid(ytdlpPath))
         {
-            YtDlpStatusText.Text = "Yuklu";
+            YtDlpStatusText.Text = "Installed";
             YtDlpStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen);
             YtDlpPathText.Text = ytdlpPath;
             
             var version = GetToolVersion(ytdlpPath);
             if (version != null)
             {
-                YtDlpVersionText.Text = $"Surum: {version}";
+                YtDlpVersionText.Text = $"Version: {version}";
                 YtDlpVersionText.Visibility = Visibility.Visible;
             }
             else
@@ -82,24 +82,24 @@ public sealed partial class ToolsPage : Page
         }
         else
         {
-            YtDlpStatusText.Text = "Yuklu degil";
+            YtDlpStatusText.Text = "Not installed";
             YtDlpStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange);
-            YtDlpPathText.Text = "Asagidaki butonla dosyayi secin";
+            YtDlpPathText.Text = "Select the file using the button below";
             YtDlpVersionText.Visibility = Visibility.Collapsed;
         }
         
-        // ffmpeg durumu
+        // ffmpeg status
         var ffmpegPath = _settingsService.FfmpegPath;
         if (IsToolValid(ffmpegPath))
         {
-            FfmpegStatusText.Text = "Yuklu";
+            FfmpegStatusText.Text = "Installed";
             FfmpegStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen);
             FfmpegPathText.Text = ffmpegPath;
             
             var version = GetToolVersion(ffmpegPath);
             if (version != null)
             {
-                FfmpegVersionText.Text = $"Surum: {version}";
+                FfmpegVersionText.Text = $"Version: {version}";
                 FfmpegVersionText.Visibility = Visibility.Visible;
             }
             else
@@ -109,9 +109,9 @@ public sealed partial class ToolsPage : Page
         }
         else
         {
-            FfmpegStatusText.Text = "Yuklu degil";
+            FfmpegStatusText.Text = "Not installed";
             FfmpegStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange);
-            FfmpegPathText.Text = "Asagidaki butonla dosyayi secin (MP3 icin gerekli)";
+            FfmpegPathText.Text = "Select the file using the button below (required for MP3)";
             FfmpegVersionText.Visibility = Visibility.Collapsed;
         }
     }
@@ -131,12 +131,12 @@ public sealed partial class ToolsPage : Page
     
     private async void YtDlpSelectButton_Click(object sender, RoutedEventArgs e)
     {
-        var filePath = await PickExeFile("yt-dlp.exe Sec");
+        var filePath = await PickExeFile("Select yt-dlp.exe");
         if (filePath == null) return;
         
         if (!File.Exists(filePath))
         {
-            await ShowInfoDialog("Hata", "Secilen dosya bulunamadi.");
+            await ShowInfoDialog("Error", "Selected file not found.");
             return;
         }
         
@@ -147,22 +147,22 @@ public sealed partial class ToolsPage : Page
         
         if (IsToolValid(filePath))
         {
-            await ShowInfoDialog("Basarili", $"yt-dlp yolu kaydedildi:\n{filePath}");
+            await ShowInfoDialog("Success", $"yt-dlp path saved:\n{filePath}");
         }
         else
         {
-            await ShowInfoDialog("Uyari", "Dosya kaydedildi ancak dogrulanamadi. Yine de devam edebilirsiniz.");
+            await ShowInfoDialog("Warning", "File saved but could not be verified. You can still continue.");
         }
     }
     
     private async void FfmpegSelectButton_Click(object sender, RoutedEventArgs e)
     {
-        var filePath = await PickExeFile("ffmpeg.exe Sec (bin klasorundeki)");
+        var filePath = await PickExeFile("Select ffmpeg.exe (from bin folder)");
         if (filePath == null) return;
         
         if (!File.Exists(filePath))
         {
-            await ShowInfoDialog("Hata", "Secilen dosya bulunamadi.");
+            await ShowInfoDialog("Error", "Selected file not found.");
             return;
         }
         
@@ -173,11 +173,11 @@ public sealed partial class ToolsPage : Page
         
         if (IsToolValid(filePath))
         {
-            await ShowInfoDialog("Basarili", $"ffmpeg yolu kaydedildi:\n{filePath}");
+            await ShowInfoDialog("Success", $"ffmpeg path saved:\n{filePath}");
         }
         else
         {
-            await ShowInfoDialog("Uyari", "Dosya kaydedildi ancak dogrulanamadi. Yine de devam edebilirsiniz.");
+            await ShowInfoDialog("Warning", "File saved but could not be verified. You can still continue.");
         }
     }
     
@@ -195,7 +195,7 @@ public sealed partial class ToolsPage : Page
     {
         var btn = (Button)sender;
         btn.IsEnabled = false;
-        btn.Content = "Kontrol ediliyor...";
+        btn.Content = "Checking...";
         
         try
         {
@@ -216,20 +216,20 @@ public sealed partial class ToolsPage : Page
             
             if (string.IsNullOrEmpty(latestVersion))
             {
-                await ShowInfoDialog("Kontrol", "GitHub'dan surum bilgisi alinamadi.");
+                await ShowInfoDialog("Check", "Version info could not be retrieved from GitHub.");
             }
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("yt-dlp ", "").Replace("v", "")))
             {
-                await ShowInfoDialog("Guncel", $"yt-dlp zaten guncel: {currentVersion}");
+                await ShowInfoDialog("Up to date", $"yt-dlp is already up to date: {currentVersion}");
             }
             else
             {
                 var result = await new ContentDialog
                 {
-                    Title = "Yeni Surum Mevcut",
-                    Content = $"Guncel surum: {latestVersion}\nMevcut: {currentVersion ?? "Bilinmiyor"}\n\nGitHub'dan indirmek ister misiniz?",
-                    PrimaryButtonText = "Indir",
-                    CloseButtonText = "Iptal",
+                    Title = "New Version Available",
+                    Content = $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
+                    PrimaryButtonText = "Download",
+                    CloseButtonText = "Cancel",
                     XamlRoot = App.MainWindow.Content.XamlRoot
                 }.ShowAsync();
                 
@@ -241,12 +241,12 @@ public sealed partial class ToolsPage : Page
         }
         catch (Exception ex)
         {
-            await ShowInfoDialog("Hata", $"Kontrol hatasi: {ex.Message}");
+            await ShowInfoDialog("Error", $"Check error: {ex.Message}");
         }
         finally
         {
             btn.IsEnabled = true;
-            btn.Content = "Yeni Surum var mi?";
+            btn.Content = "Check for Update";
         }
     }
     
@@ -254,7 +254,7 @@ public sealed partial class ToolsPage : Page
     {
         var btn = (Button)sender;
         btn.IsEnabled = false;
-        btn.Content = "Kontrol ediliyor...";
+        btn.Content = "Checking...";
         
         try
         {
@@ -275,20 +275,20 @@ public sealed partial class ToolsPage : Page
             
             if (string.IsNullOrEmpty(latestVersion))
             {
-                await ShowInfoDialog("Kontrol", "GitHub'dan surum bilgisi alinamadi.");
+                await ShowInfoDialog("Check", "Version info could not be retrieved from GitHub.");
             }
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("n", "")))
             {
-                await ShowInfoDialog("Guncel", $"ffmpeg zaten guncel: {currentVersion}");
+                await ShowInfoDialog("Up to date", $"ffmpeg is already up to date: {currentVersion}");
             }
             else
             {
                 var result = await new ContentDialog
                 {
-                    Title = "Yeni Surum Mevcut",
-                    Content = $"Guncel surum: {latestVersion}\nMevcut: {currentVersion ?? "Bilinmiyor"}\n\nGitHub'dan indirmek ister misiniz?",
-                    PrimaryButtonText = "Indir",
-                    CloseButtonText = "Iptal",
+                    Title = "New Version Available",
+                    Content = $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
+                    PrimaryButtonText = "Download",
+                    CloseButtonText = "Cancel",
                     XamlRoot = App.MainWindow.Content.XamlRoot
                 }.ShowAsync();
                 
@@ -300,12 +300,12 @@ public sealed partial class ToolsPage : Page
         }
         catch (Exception ex)
         {
-            await ShowInfoDialog("Hata", $"Kontrol hatasi: {ex.Message}");
+            await ShowInfoDialog("Error", $"Check error: {ex.Message}");
         }
         finally
         {
             btn.IsEnabled = true;
-            btn.Content = "Yeni Surum var mi?";
+            btn.Content = "Check for Update";
         }
     }
     
@@ -317,13 +317,13 @@ public sealed partial class ToolsPage : Page
             {
                 Title = title,
                 Content = message,
-                CloseButtonText = "Tamam",
+                CloseButtonText = "OK",
                 XamlRoot = App.MainWindow.Content.XamlRoot
             }.ShowAsync();
         }
         catch
         {
-            // Dialog zaten aciksa veya XamlRoot gecersizse atla
+            // Skip if dialog is already open or XamlRoot is invalid
         }
     }
     

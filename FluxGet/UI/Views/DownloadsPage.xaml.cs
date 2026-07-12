@@ -40,7 +40,7 @@ namespace FluxGet.UI.Views
             UpdateEmptyState();
         }
         
-        // ---- Yeni Indirme Dialogu (Gelismis) ----
+        // ---- New Download Dialog (Advanced) ----
         private async void NewDownloadButton_Click(object sender, RoutedEventArgs e)
         {
             await ShowAddDownloadDialog();
@@ -50,9 +50,9 @@ namespace FluxGet.UI.Views
         {
             var dialog = new ContentDialog
             {
-                Title = "Yeni Indirme Ekle",
-                PrimaryButtonText = "Indirmeyi Baslat",
-                CloseButtonText = "Iptal",
+                Title = "Add New Download",
+                PrimaryButtonText = "Start Download",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
                 MaxWidth = 500
@@ -60,16 +60,16 @@ namespace FluxGet.UI.Views
             
             var panel = new StackPanel { Spacing = 12, Margin = new Thickness(0, 16, 0, 0) };
             
-            var urlLabel = new TextBlock { Text = "Indirme Adresi (URL)", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
+            var urlLabel = new TextBlock { Text = "Download URL", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
             var urlBox = new TextBox
             {
-                PlaceholderText = "YouTube veya dosya linki yapistirin",
+                PlaceholderText = "Paste YouTube or file link",
                 Text = prefillUrl ?? "",
                 Width = 460
             };
             var ytHint = new TextBlock
             {
-                Text = "YouTube linkleri otomatik algilanir (MP4/MP3)",
+                Text = "YouTube links auto-detected (MP4/MP3)",
                 FontSize = 11,
                 Foreground = new SolidColorBrush(ColorHelper.FromArgb(255, 30, 144, 255)),
                 Margin = new Thickness(0, 4, 0, 0)
@@ -78,8 +78,8 @@ namespace FluxGet.UI.Views
             panel.Children.Add(urlBox);
             panel.Children.Add(ytHint);
             
-            // Kaydet yolu
-            var pathLabel = new TextBlock { Text = "Kaydet Konumu", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
+            // Save path
+            var pathLabel = new TextBlock { Text = "Save Location", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
             var pathPanel = new Grid();
             pathPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             pathPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
@@ -93,7 +93,7 @@ namespace FluxGet.UI.Views
             };
             var browseButton = new Button
             {
-                Content = "Gozat",
+                Content = "Browse",
                 Margin = new Thickness(8, 0, 0, 0),
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -119,8 +119,8 @@ namespace FluxGet.UI.Views
             panel.Children.Add(pathLabel);
             panel.Children.Add(pathPanel);
             
-            // Kategori secici
-            var catLabel = new TextBlock { Text = "Kategori", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
+            // Category selector
+            var catLabel = new TextBlock { Text = "Category", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
             var catCombo = new ComboBox
             {
                 Width = 200,
@@ -156,9 +156,9 @@ namespace FluxGet.UI.Views
         {
             var ytDialog = new ContentDialog
             {
-                Title = "YouTube Indirme",
-                PrimaryButtonText = "Indir",
-                CloseButtonText = "Iptal",
+                Title = "YouTube Download",
+                PrimaryButtonText = "Download",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
                 MaxWidth = 550
@@ -208,9 +208,9 @@ namespace FluxGet.UI.Views
                 {
                     var errorDialog = new ContentDialog
                     {
-                        Title = "Indirme Hatasi",
+                        Title = "Download Error",
                         Content = ex.Message,
-                        CloseButtonText = "Tamam",
+                        CloseButtonText = "OK",
                         XamlRoot = App.MainWindow.Content.XamlRoot
                     };
                     await errorDialog.ShowAsync();
@@ -227,7 +227,7 @@ namespace FluxGet.UI.Views
             return name.Length > 100 ? name[..100] : name;
         }
         
-        // ---- Filtreleme ----
+        // ---- Filtering ----
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is string tag)
@@ -253,19 +253,19 @@ namespace FluxGet.UI.Views
             }
         }
         
-        // ---- Diger Secenekler (Context Menu) ----
+        // ---- More Options (Context Menu) ----
         private void MoreOptionsButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is DownloadTask task)
             {
                 var menu = new MenuFlyout();
                 
-                // Duraklat / Devam
+                // Pause / Resume
                 if (task.Status == DownloadStatus.Downloading)
                 {
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Duraklat",
+                        Text = "Pause",
                         Icon = new FontIcon { Glyph = "\uE769" },
                         Command = _viewModel.PauseDownloadCommand,
                         CommandParameter = task
@@ -275,7 +275,7 @@ namespace FluxGet.UI.Views
                 {
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Devam Ettir",
+                        Text = "Resume",
                         Icon = new FontIcon { Glyph = "\uE768" },
                         Command = _viewModel.ResumeDownloadCommand,
                         CommandParameter = task
@@ -284,24 +284,24 @@ namespace FluxGet.UI.Views
                 
                 menu.Items.Add(new MenuFlyoutSeparator());
                 
-                // Yeniden Indir
+                // Retry Download
                 if (task.Status == DownloadStatus.Completed || task.Status == DownloadStatus.Error || task.Status == DownloadStatus.Cancelled)
                 {
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Yeniden Indir",
+                        Text = "Retry Download",
                         Icon = new FontIcon { Glyph = "\uE72C" },
                         Command = _viewModel.StartDownloadCommand,
                         CommandParameter = task
                     });
                 }
                 
-                // Iptal
+                // Cancel
                 if (task.Status == DownloadStatus.Downloading || task.Status == DownloadStatus.Queued)
                 {
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Iptal Et",
+                        Text = "Cancel",
                         Icon = new FontIcon { Glyph = "\uE711" },
                         Command = _viewModel.CancelDownloadCommand,
                         CommandParameter = task
@@ -310,12 +310,12 @@ namespace FluxGet.UI.Views
                 
                 menu.Items.Add(new MenuFlyoutSeparator());
                 
-                // Dosyayi Ac
+                // Open File
                 if (task.Status == DownloadStatus.Completed)
                 {
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Dosyayi Ac",
+                        Text = "Open File",
                         Icon = new FontIcon { Glyph = "\uE8A7" },
                         Command = _viewModel.OpenFileCommand,
                         CommandParameter = task
@@ -323,7 +323,7 @@ namespace FluxGet.UI.Views
                     
                     menu.Items.Add(new MenuFlyoutItem
                     {
-                        Text = "Klasoru Ac",
+                        Text = "Open Folder",
                         Icon = new FontIcon { Glyph = "\uE838" },
                         Command = _viewModel.OpenFolderCommand,
                         CommandParameter = task
@@ -332,10 +332,10 @@ namespace FluxGet.UI.Views
                 
                 menu.Items.Add(new MenuFlyoutSeparator());
                 
-                // URL Kopyala
+                // Copy URL
                 var copyUrlItem = new MenuFlyoutItem
                 {
-                    Text = "URL Kopyala",
+                    Text = "Copy URL",
                     Icon = new FontIcon { Glyph = "\uE8C8" }
                 };
                 copyUrlItem.Click += (s, args) =>
@@ -348,10 +348,10 @@ namespace FluxGet.UI.Views
                 
                 menu.Items.Add(new MenuFlyoutSeparator());
                 
-                // Kaldir
+                // Remove
                 menu.Items.Add(new MenuFlyoutItem
                 {
-                    Text = "Kaldir",
+                    Text = "Remove",
                     Icon = new FontIcon { Glyph = "\uE74D" },
                     Command = _viewModel.RemoveDownloadCommand,
                     CommandParameter = task
@@ -385,7 +385,7 @@ namespace FluxGet.UI.Views
             }
         }
         
-        // ---- Buton Handlerlari ----
+        // ---- Button Handlers ----
         private async void PauseResumeButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is DownloadTask task)

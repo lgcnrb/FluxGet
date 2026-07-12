@@ -88,13 +88,13 @@ public sealed partial class YouTubePage : Page
         var url = UrlBox.Text.Trim();
         if (string.IsNullOrWhiteSpace(url))
         {
-            ShowError("Lutfen bir YouTube URL'si girin.");
+            ShowError("Please enter a YouTube URL.");
             return;
         }
         
         if (!YouTubeService.IsYouTubeUrl(url))
         {
-            ShowError("Gecersiz YouTube URL'si. youtube.com veya youtu.be linki olmali.");
+            ShowError("Invalid YouTube URL. Must be a youtube.com or youtu.be link.");
             return;
         }
         
@@ -104,11 +104,11 @@ public sealed partial class YouTubePage : Page
         var ytdlpPath = Path.Combine(toolsDir, "yt-dlp.exe");
         if (!File.Exists(ytdlpPath))
         {
-            ShowError("yt-dlp yuklu degil. Lutfen Ayarlar > Araclar bolumunden yukleyin.");
+            ShowError("yt-dlp is not installed. Please install it from Settings > Tools.");
             return;
         }
         
-        ShowLoading("Video bilgisi aliniyor...");
+        ShowLoading("Fetching video info...");
         FetchInfoButton.IsEnabled = false;
         
         try
@@ -117,13 +117,13 @@ public sealed partial class YouTubePage : Page
             
             HideLoading();
             
-            // Sol kolon: Video bilgileri
+            // Left column: Video info
             VideoTitleText.Text = _videoInfo.Title;
             VideoUploaderText.Text = _videoInfo.Uploader;
             VideoDurationText.Text = _videoInfo.Duration;
             VideoInfoBorder.Visibility = Visibility.Visible;
             
-            // Sag kolon: Video onizleme
+            // Right column: Video preview
             VideoPreviewBorder.Visibility = Visibility.Visible;
             PreviewTitleText.Text = _videoInfo.Title;
             PreviewUploaderText.Text = _videoInfo.Uploader;
@@ -138,7 +138,7 @@ public sealed partial class YouTubePage : Page
                 catch { }
             }
             
-            // Tum video formatlarini topla
+            // Collect all video formats
             var allVideoFormats = _videoInfo.Formats
                 .Where(f => f.HasVideo && f.FileSize > 0 && !string.IsNullOrEmpty(f.Resolution))
                 .ToList();
@@ -148,7 +148,7 @@ public sealed partial class YouTubePage : Page
                 .OrderByDescending(f => f.FileSize)
                 .ToList();
             
-            // MP4 boyutu (birlestik format varsa en buyuk, yoksa video+ses toplami)
+            // MP4 size (largest merged format, or video+audio sum)
             var bestMergedMp4 = allVideoFormats
                 .Where(f => f.HasAudio && f.Extension == "mp4")
                 .OrderByDescending(f => f.FileSize)
@@ -156,24 +156,24 @@ public sealed partial class YouTubePage : Page
             
             if (bestMergedMp4 != null)
             {
-                Mp4SizeText.Text = $"Yaklasik {FormatBytes(bestMergedMp4.FileSize)}";
+                Mp4SizeText.Text = $"Approximately {FormatBytes(bestMergedMp4.FileSize)}";
             }
             else
             {
                 var bestVideo = allVideoFormats.Where(f => f.Extension is "mp4" or "webm")
                     .OrderByDescending(f => f.FileSize).FirstOrDefault();
                 if (bestVideo != null && audioFormats.Any())
-                    Mp4SizeText.Text = $"Yaklasik {FormatBytes(bestVideo.FileSize + audioFormats[0].FileSize)}";
+                    Mp4SizeText.Text = $"Approximately {FormatBytes(bestVideo.FileSize + audioFormats[0].FileSize)}";
                 else
                     Mp4SizeText.Text = "";
             }
             
-            Mp3SizeText.Text = audioFormats.Any() ? $"Yaklasik {FormatBytes(audioFormats[0].FileSize)}" : "";
+            Mp3SizeText.Text = audioFormats.Any() ? $"Approximately {FormatBytes(audioFormats[0].FileSize)}" : "";
             
-            // Cozunurlukleri doldur
+            // Fill resolutions
             ResolutionComboBox.Items.Clear();
             
-            // Grublari cozunurluge gore olustur
+            // Group by resolution
             var allByHeight = allVideoFormats
                 .Select(f =>
                 {
@@ -192,7 +192,7 @@ public sealed partial class YouTubePage : Page
                 var height = group.Key;
                 var hasMergedFormat = group.Any(x => x.Format.HasAudio);
                 
-                // Boyut hesapla
+                // Calculate size
                 long estimatedSize;
                 if (hasMergedFormat)
                 {
@@ -207,11 +207,11 @@ public sealed partial class YouTubePage : Page
                     estimatedSize = bestVideoOnly.FileSize + audioSize;
                 }
                 
-                // ffmpeg yoksa sadece birlesik formatlari goster
+                // If no ffmpeg, only show merged formats
                 if (!_hasFfmpeg && !hasMergedFormat)
                     continue;
                 
-                var suffix = hasMergedFormat ? "" : " (otomatik birlestirilecek)";
+                var suffix = hasMergedFormat ? "" : " (will be merged automatically)";
                 ResolutionComboBox.Items.Add(new ComboBoxItem
                 {
                     Content = $"{height}p - {FormatBytes(estimatedSize)}{suffix}",
@@ -226,12 +226,12 @@ public sealed partial class YouTubePage : Page
             UpdateFormatCardStyles();
             DownloadButton.Visibility = Visibility.Visible;
             
-            // Onizleme guncelle
+            // Update preview
             UpdatePreviewInfo();
         }
         catch (Exception ex)
         {
-            ShowError($"Hata: {ex.Message}");
+            ShowError($"Error: {ex.Message}");
         }
         finally
         {
@@ -284,7 +284,7 @@ public sealed partial class YouTubePage : Page
                 SelectedFormatText.Foreground = new SolidColorBrush(Colors.LightBlue);
                 SelectedSizeBadge.Visibility = Visibility.Visible;
                 
-                // Tahmini boyutu ComboBox'tan al
+                // Get estimated size from ComboBox
                 var sizeText = item.Content.ToString() ?? "";
                 var dashIdx = sizeText.IndexOf(" - ");
                 if (dashIdx >= 0)
@@ -297,7 +297,7 @@ public sealed partial class YouTubePage : Page
         }
         else
         {
-            SelectedFormatText.Text = "MP3 Sadece Ses";
+            SelectedFormatText.Text = "MP3 Audio Only";
             SelectedFormatText.Foreground = new SolidColorBrush(Colors.LightGreen);
             
             var bestAudio = _videoInfo.Formats
@@ -332,7 +332,7 @@ public sealed partial class YouTubePage : Page
     {
         if (_videoInfo == null)
         {
-            ShowError("Once video bilgisi getirin.");
+            ShowError("Please fetch video info first.");
             return;
         }
         
@@ -348,14 +348,14 @@ public sealed partial class YouTubePage : Page
             }
             else
             {
-                ShowError("Lutfen bir cozunurluk secin.");
+                ShowError("Please select a resolution.");
                 return;
             }
             
-            // ffmpeg yoksa ve birlesik format yoksa hata ver
-            if (!_hasFfmpeg && !hasMergedFormat)
-            {
-                ShowError("Secilen cozunurluk icin video ve ses ayri indirilir. Birlestirme icin ffmpeg gerekli. Lutfen Ayarlar > Araclar'dan ffmpeg yukleyin veya daha dusuk bir cozunurluk secin.");
+                // If no ffmpeg and no merged format, show error
+                if (!_hasFfmpeg && !hasMergedFormat)
+                {
+                    ShowError("For the selected resolution, video and audio are downloaded separately. ffmpeg is required for merging. Please install ffmpeg from Settings > Tools or select a lower resolution.");
                 return;
             }
         }
@@ -365,7 +365,7 @@ public sealed partial class YouTubePage : Page
         DownloadProgressBar.Value = 0;
         DownloadProgressBar.IsIndeterminate = false;
         DownloadPercentText.Text = "%0";
-        DownloadStatusText.Text = "Baslatiliyor...";
+        DownloadStatusText.Text = "Starting...";
         
         var downloadService = App.GetService<IDownloadService>();
         var url = UrlBox.Text.Trim();
@@ -386,13 +386,13 @@ public sealed partial class YouTubePage : Page
             
             if (!_isMp4Mode)
             {
-                DownloadStatusText.Text = "Ses indiriliyor...";
+                DownloadStatusText.Text = "Downloading audio...";
                 var tempPath = outputPath + ".webm";
                 outputPath += ".mp3";
                 
                 await _youTubeService.DownloadAudioAsync(url, tempPath, progress);
                 
-                DownloadStatusText.Text = "MP3'e donusturuluyor...";
+                DownloadStatusText.Text = "Converting to MP3...";
                 DownloadProgressBar.IsIndeterminate = true;
                 
                 await _youTubeService.ConvertToMp3Async(tempPath, outputPath);
@@ -402,8 +402,8 @@ public sealed partial class YouTubePage : Page
             else
             {
                 DownloadStatusText.Text = hasMergedFormat
-                    ? "Video indiriliyor..."
-                    : "Video ve ses indiriliyor, birlestiriliyor...";
+                    ? "Downloading video..."
+                    : "Downloading video and audio, merging...";
                 outputPath += ".mp4";
                 await _youTubeService.DownloadVideoByHeightAsync(url, outputPath, selectedHeight!.Value, progress);
             }
@@ -417,7 +417,7 @@ public sealed partial class YouTubePage : Page
             
             DownloadProgressBar.Value = 100;
             DownloadPercentText.Text = "%100";
-            DownloadStatusText.Text = "Tamamlandi!";
+            DownloadStatusText.Text = "Completed!";
             
             var notificationService = App.GetService<DownloadNotificationService>();
             notificationService.NotifyCompleted(task);
@@ -427,11 +427,11 @@ public sealed partial class YouTubePage : Page
             ProgressBorder.Visibility = Visibility.Collapsed;
             var errorMsg = ex.Message;
             if (errorMsg.Contains("ffmpeg"))
-                errorMsg = "ffmpeg yuklu degil. Video ve ses ayri indirildi ama birlestirilemedi. Ayarlar > Araclar'dan ffmpeg yukleyin.";
+                errorMsg = "ffmpeg is not installed. Video and audio were downloaded separately but could not be merged. Please install ffmpeg from Settings > Tools.";
             else if (errorMsg.Contains("403"))
-                errorMsg = "YouTube indirmeyi engelledi. Lutfen baska bir video deneyin.";
+                errorMsg = "YouTube blocked the download. Please try a different video.";
             else if (errorMsg.Contains("HTTP"))
-                errorMsg = $"Indirme hatasi: {errorMsg.Split('\n')[0]}";
+                errorMsg = $"Download error: {errorMsg.Split('\n')[0]}";
             ShowError(errorMsg);
         }
         finally
@@ -496,7 +496,7 @@ public sealed partial class YouTubePage : Page
     
     private static string FormatBytes(long bytes) => bytes switch
     {
-        <= 0 => "Bilinmiyor",
+        <= 0 => "Unknown",
         < 1024 => $"{bytes} B",
         < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
         < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",

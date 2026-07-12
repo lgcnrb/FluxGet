@@ -38,7 +38,7 @@ namespace FluxGet.UI.Views;
     {
         var active = _queueService.ActiveCount;
         var queued = _queueService.PendingCount;
-        QueueStatusText.Text = $"{queued} kuyrukta, {active} aktif";
+        QueueStatusText.Text = $"{queued} queued, {active} active";
     }
     
     private void UpdateEmptyState()

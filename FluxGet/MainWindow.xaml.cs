@@ -35,7 +35,7 @@ namespace FluxGet
             NavView.SelectedItem = NavView.MenuItems[0];
             ContentFrame.Navigate(typeof(DashboardPage));
             
-            // Her 500ms'de bir refresh
+            // Refresh every 500ms
             _refreshTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(500)
@@ -43,7 +43,7 @@ namespace FluxGet
             _refreshTimer.Tick += RefreshTimer_Tick;
             _refreshTimer.Start();
             
-            // Clipboard izleme - 2 saniyede bir kontrol et
+            // Clipboard monitoring - check every 2 seconds
             _clipboardTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(2)
@@ -122,7 +122,7 @@ namespace FluxGet
         
         private void Grid_DragOver(object sender, DragEventArgs e)
         {
-            e.DragUIOverride.Caption = "URL birakarak indirme baslat";
+            e.DragUIOverride.Caption = "Drop URL to start download";
             e.DragUIOverride.IsCaptionVisible = true;
             e.DragUIOverride.IsContentVisible = true;
             e.DragUIOverride.IsGlyphVisible = true;
@@ -151,7 +151,7 @@ namespace FluxGet
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Surukle-birak indirme hatasi: {ex.Message}");
+                        System.Diagnostics.Debug.WriteLine($"Drag-drop download error: {ex.Message}");
                     }
                 }
             }

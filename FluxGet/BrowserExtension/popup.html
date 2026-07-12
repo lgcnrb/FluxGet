@@ -824,7 +824,7 @@
     }
     
     .resolution-card.recommended::before {
-      content: 'ONERILEN';
+      content: 'RECOMMENDED';
       position: absolute;
       top: -8px;
       right: -4px;
@@ -898,24 +898,24 @@
     </div>
     <div class="status-pill" id="statusBadge">
       <span class="status-pulse"></span>
-      <span id="statusText">Baglanti yok</span>
+      <span id="statusText">Disconnected</span>
     </div>
   </div>
   
   <div class="tabs">
-    <div class="tab active" data-tab="download">Indir</div>
-    <div class="tab" data-tab="links">Linkler</div>
-    <div class="tab" data-tab="active">Indirmeler</div>
-    <div class="tab" data-tab="history">Gecmis</div>
+    <div class="tab active" data-tab="download">Download</div>
+    <div class="tab" data-tab="links">Links</div>
+    <div class="tab" data-tab="active">Active</div>
+    <div class="tab" data-tab="history">History</div>
   </div>
   
-  <!-- Indir Tab -->
+  <!-- Download Tab -->
   <div class="tab-content active" id="tab-download">
     <div class="panel">
       <div class="input-wrapper">
-        <input type="text" class="url-input" id="urlInput" placeholder="URL yapistirin..." autofocus>
+        <input type="text" class="url-input" id="urlInput" placeholder="Paste URL here..." autofocus>
         <button class="download-btn" id="downloadBtn" disabled>
-          <span>&#8595;</span> Indir
+          <span>&#8595;</span> Download
         </button>
       </div>
       
@@ -926,67 +926,67 @@
     </div>
   </div>
   
-  <!-- Linkler Tab -->
+  <!-- Links Tab -->
   <div class="tab-content" id="tab-links">
     <div class="panel">
       <div class="filter-bar" id="filterBar">
-        <button class="filter-chip active" data-filter="all">Tumu</button>
+        <button class="filter-chip active" data-filter="all">All</button>
         <button class="filter-chip" data-filter="video">Video</button>
-        <button class="filter-chip" data-filter="audio">Ses</button>
-        <button class="filter-chip" data-filter="image">Gorsel</button>
-        <button class="filter-chip" data-filter="document">Dokuman</button>
+        <button class="filter-chip" data-filter="audio">Audio</button>
+        <button class="filter-chip" data-filter="image">Image</button>
+        <button class="filter-chip" data-filter="document">Document</button>
       </div>
       
       <div class="section-header">
-        <span class="section-title">Algilanan Linkler</span>
+        <span class="section-title">Detected Links</span>
         <span class="count-badge" id="linkCount">0</span>
       </div>
       
       <div class="link-list" id="linkList">
         <div class="empty-state">
           <div class="empty-icon">&#128279;</div>
-          <div class="empty-text">Bu sayfada link algilanamadi</div>
+          <div class="empty-text">No links detected on this page</div>
         </div>
       </div>
       
       <div class="batch-bar" id="batchBar" style="display:none;">
         <button class="btn btn-primary btn-sm" id="downloadAllBtn">
-          <span>&#8595;</span> Tumunu Indir
+          <span>&#8595;</span> Download All
         </button>
         <button class="btn btn-secondary btn-sm" id="downloadFilteredBtn">
-          <span>&#8595;</span> Filtrelenenleri Indir
+          <span>&#8595;</span> Download Filtered
         </button>
       </div>
     </div>
   </div>
   
-  <!-- Aktif Indirmeler Tab -->
+  <!-- Active Downloads Tab -->
   <div class="tab-content" id="tab-active">
     <div class="panel">
       <div class="section-header">
-        <span class="section-title">Aktif Indirmeler</span>
+        <span class="section-title">Active Downloads</span>
         <span class="count-badge" id="activeDownloadCount">0</span>
       </div>
       <div id="activeDownloads">
         <div class="empty-state">
           <div class="empty-icon">&#128229;</div>
-          <div class="empty-text">Aktif indirme yok</div>
+          <div class="empty-text">No active downloads</div>
         </div>
       </div>
     </div>
   </div>
   
-  <!-- Gecmis Tab -->
+  <!-- History Tab -->
   <div class="tab-content" id="tab-history">
     <div class="panel">
       <div class="section-header">
-        <span class="section-title">Indirme Gecmisi</span>
-        <button class="btn btn-secondary btn-sm" id="clearHistoryBtn">Temizle</button>
+        <span class="section-title">Download History</span>
+        <button class="btn btn-secondary btn-sm" id="clearHistoryBtn">Clear</button>
       </div>
       <div id="historyList">
         <div class="empty-state">
           <div class="empty-icon">&#128216;</div>
-          <div class="empty-text">Henuz indirme yok</div>
+          <div class="empty-text">No downloads yet</div>
         </div>
       </div>
     </div>
@@ -998,59 +998,59 @@
       <div class="modal-header">
         <div class="modal-icon">&#127909;</div>
         <div>
-          <div class="modal-title">YouTube Video Indir</div>
-          <div class="modal-subtitle" id="ytModalTitle">Cozunurluk secin</div>
+          <div class="modal-title">Download YouTube Video</div>
+          <div class="modal-subtitle" id="ytModalTitle">Select resolution</div>
         </div>
       </div>
       <div class="modal-body">
         <div class="format-toggle" id="formatToggle">
           <div class="format-option active" data-format="mp4">MP4 Video</div>
-          <div class="format-option" data-format="mp3">MP3 Ses</div>
+          <div class="format-option" data-format="mp3">MP3 Audio</div>
         </div>
         
         <div class="resolution-grid" id="resolutionGrid">
           <div class="resolution-card" data-res="360">
             <span class="resolution-value">360</span>
             <span class="resolution-unit">p</span>
-            <span class="resolution-label">Dusuk</span>
-            <span class="resolution-size">~50 MB/saat</span>
+            <span class="resolution-label">Low</span>
+            <span class="resolution-size">~50 MB/hr</span>
           </div>
           <div class="resolution-card recommended" data-res="480">
             <span class="resolution-value">480</span>
             <span class="resolution-unit">p</span>
-            <span class="resolution-label">Standart</span>
-            <span class="resolution-size">~100 MB/saat</span>
+            <span class="resolution-label">Standard</span>
+            <span class="resolution-size">~100 MB/hr</span>
           </div>
           <div class="resolution-card selected" data-res="720">
             <span class="resolution-value">720</span>
             <span class="resolution-unit">p</span>
             <span class="resolution-label">HD</span>
-            <span class="resolution-size">~200 MB/saat</span>
+            <span class="resolution-size">~200 MB/hr</span>
           </div>
           <div class="resolution-card" data-res="1080">
             <span class="resolution-value">1080</span>
             <span class="resolution-unit">p</span>
             <span class="resolution-label">Full HD</span>
-            <span class="resolution-size">~400 MB/saat</span>
+            <span class="resolution-size">~400 MB/hr</span>
           </div>
           <div class="resolution-card" data-res="1440">
             <span class="resolution-value">1440</span>
             <span class="resolution-unit">p</span>
             <span class="resolution-label">2K</span>
-            <span class="resolution-size">~800 MB/saat</span>
+            <span class="resolution-size">~800 MB/hr</span>
           </div>
           <div class="resolution-card" data-res="2160">
             <span class="resolution-value">2160</span>
             <span class="resolution-unit">p</span>
             <span class="resolution-label">4K</span>
-            <span class="resolution-size">~2 GB/saat</span>
+            <span class="resolution-size">~2 GB/hr</span>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="ytModalCancel">Iptal</button>
+        <button class="btn btn-secondary" id="ytModalCancel">Cancel</button>
         <button class="btn btn-primary" id="ytModalDownload">
-          <span>&#8595;</span> Indir
+          <span>&#8595;</span> Download
         </button>
       </div>
     </div>

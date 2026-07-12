@@ -72,7 +72,7 @@ public class QueueService : IQueueService, IDisposable
             SortQueue();
         }
         
-        _logger.LogInformation("Kuyruga eklendi: {FileName} (Oncelik: {Priority}, Sirada: {Order})",
+        _logger.LogInformation("Added to queue: {FileName} (Priority: {Priority}, Order: {Order})",
             task.FileName, task.Priority, task.QueueOrder);
         
         await ProcessQueueAsync();
@@ -103,7 +103,7 @@ public class QueueService : IQueueService, IDisposable
             ReindexQueue();
         }
         
-        _logger.LogInformation("Kuyruktan cikarildi: {FileName}", task.FileName);
+        _logger.LogInformation("Removed from queue: {FileName}", task.FileName);
         await Task.CompletedTask;
     }
     
@@ -162,7 +162,7 @@ public class QueueService : IQueueService, IDisposable
             SortQueue();
         }
         
-        _logger.LogInformation("Oncelik degistirildi: {FileName} -> {Priority}", task.FileName, task.Priority);
+        _logger.LogInformation("Priority changed: {FileName} -> {Priority}", task.FileName, task.Priority);
         await Task.CompletedTask;
     }
     
@@ -177,7 +177,7 @@ public class QueueService : IQueueService, IDisposable
             _pendingQueue.Clear();
         }
         
-        _logger.LogInformation("Kuyruk temizlendi");
+        _logger.LogInformation("Queue cleared");
         await Task.CompletedTask;
     }
     
@@ -198,7 +198,7 @@ public class QueueService : IQueueService, IDisposable
             }
         }
         
-        _logger.LogInformation("Kuyruk durduruldu");
+        _logger.LogInformation("Queue paused");
     }
     
     public async Task ResumeQueueAsync()
@@ -261,7 +261,7 @@ public class QueueService : IQueueService, IDisposable
                 var cts = new CancellationTokenSource();
                 _taskCancellations[nextTask.Id] = cts;
                 
-                _logger.LogInformation("Indirme baslatiliyor: {FileName} (Oncelik: {Priority})",
+                _logger.LogInformation("Starting download: {FileName} (Priority: {Priority})",
                     nextTask.FileName, nextTask.Priority);
                 
                 _ = Task.Run(async () =>
@@ -272,7 +272,7 @@ public class QueueService : IQueueService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Indirme sirasinda hata: {FileName}", nextTask.FileName);
+                        _logger.LogError(ex, "Error during download: {FileName}", nextTask.FileName);
                     }
                     finally
                     {
@@ -287,7 +287,7 @@ public class QueueService : IQueueService, IDisposable
         {
             Interlocked.Exchange(ref _isProcessing, 0);
             
-            // Kuyrukta bekleyen ve kapasite varsa devam et
+            // Pending items in queue and capacity available, continue
             bool hasPending;
             lock (_lock) { hasPending = _pendingQueue.Count > 0; }
             

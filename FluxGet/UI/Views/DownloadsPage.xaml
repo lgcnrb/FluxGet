@@ -29,14 +29,14 @@
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <FontIcon Glyph="&#xE896;" FontSize="28" VerticalAlignment="Center"/>
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Indirmeler" FontSize="28" FontWeight="SemiBold"/>
-                    <TextBlock Text="Tum indirme islemlerini yonetin"
+                    <TextBlock Text="Downloads" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="Manage all download operations"
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
             </StackPanel>
 
-            <Button Grid.Column="1" Content="+ Yeni Indirme"
+            <Button Grid.Column="1" Content="+ New Download"
                     Style="{StaticResource AccentButtonStyle}"
                     VerticalAlignment="Top" Padding="20,8"
                     Click="NewDownloadButton_Click"/>
@@ -51,13 +51,13 @@
 
             <!-- Durum Filtreleri -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
-                <Button Content="Tumu" Tag="All" Click="FilterButton_Click" Padding="16,8"/>
-                <Button Content="Aktif" Tag="Active" Click="FilterButton_Click" Padding="16,8"/>
-                <Button Content="Tamamlanan" Tag="Completed" Click="FilterButton_Click" Padding="16,8"/>
-                <Button Content="Duraklatilmis" Tag="Paused" Click="FilterButton_Click" Padding="16,8"/>
-                <Button Content="Hatali" Tag="Error" Click="FilterButton_Click" Padding="16,8"/>
+                <Button Content="All" Tag="All" Click="FilterButton_Click" Padding="16,8"/>
+                <Button Content="Active" Tag="Active" Click="FilterButton_Click" Padding="16,8"/>
+                <Button Content="Completed" Tag="Completed" Click="FilterButton_Click" Padding="16,8"/>
+                <Button Content="Paused" Tag="Paused" Click="FilterButton_Click" Padding="16,8"/>
+                <Button Content="Error" Tag="Error" Click="FilterButton_Click" Padding="16,8"/>
 
-                <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Ara..."
+                <AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search..."
                                 QueryIcon="Find" Width="240" Margin="12,0,0,0"
                                 VerticalAlignment="Center"
                                 TextChanged="SearchBox_TextChanged"/>
@@ -65,13 +65,13 @@
 
             <!-- Kategori Filtreleri -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
-                <Button Content="Tum Kategoriler" Tag="CatAll" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="All Categories" Tag="CatAll" Click="CategoryFilter_Click" Padding="14,6"/>
                 <Button Content="Video" Tag="Video" Click="CategoryFilter_Click" Padding="14,6"/>
-                <Button Content="Muzik" Tag="Music" Click="CategoryFilter_Click" Padding="14,6"/>
-                <Button Content="Belge" Tag="Document" Click="CategoryFilter_Click" Padding="14,6"/>
-                <Button Content="Arşiv" Tag="Archive" Click="CategoryFilter_Click" Padding="14,6"/>
-                <Button Content="Gorsel" Tag="Image" Click="CategoryFilter_Click" Padding="14,6"/>
-                <Button Content="Yazilim" Tag="Software" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="Music" Tag="Music" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="Document" Tag="Document" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="Archive" Tag="Archive" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="Image" Tag="Image" Click="CategoryFilter_Click" Padding="14,6"/>
+                <Button Content="Software" Tag="Software" Click="CategoryFilter_Click" Padding="14,6"/>
             </StackPanel>
         </Grid>
 
@@ -174,32 +174,32 @@
                                         Spacing="4">
                                 <!-- Duraklat/Devam -->
                                 <Button Click="PauseResumeButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Duraklat/Devam Et"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="Pause/Resume"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE769;" FontSize="14"/>
                                 </Button>
                                 <!-- Dosyayi Ac -->
                                 <Button Click="OpenFileButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Dosyayi Ac"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="Open File"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE8A7;" FontSize="14"/>
                                 </Button>
                                 <!-- Klasoru Ac -->
                                 <Button Click="OpenFolderButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Klasoru Ac"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="Open Folder"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE838;" FontSize="14"/>
                                 </Button>
                                 <!-- Iptal -->
                                 <Button Click="CancelButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Iptal Et"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="Cancel"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE711;" FontSize="14"/>
                                 </Button>
                                 <!-- Kaldir -->
                                 <Button Click="RemoveButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Kaldir"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="Remove"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE74D;" FontSize="14"/>
                                 </Button>
                                 <!-- DigerSecenekler -->
                                 <Button x:Name="MoreOptionsButton" Click="MoreOptionsButton_Click" Padding="8">
-                                    <ToolTipService.ToolTip><ToolTip Content="Diger Secenekler"/></ToolTipService.ToolTip>
+                                    <ToolTipService.ToolTip><ToolTip Content="More Options"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE712;" FontSize="14"/>
                                 </Button>
                             </StackPanel>
@@ -217,9 +217,9 @@
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
                 <FontIcon Glyph="&#xE896;" FontSize="56" HorizontalAlignment="Center"
                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                <TextBlock Text="Henuz indirme yok" FontSize="18" HorizontalAlignment="Center"
+                <TextBlock Text="No downloads yet" FontSize="18" HorizontalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                <TextBlock Text="Yeni indirme eklemek icin 'Yeni Indirme' butonuna tiklayin veya URL yapistirin"
+                <TextBlock Text="To add a new download, click the button or paste a URL"
                            FontSize="12" HorizontalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
             </StackPanel>

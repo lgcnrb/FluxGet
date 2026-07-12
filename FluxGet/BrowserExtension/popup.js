@@ -47,11 +47,11 @@ async function checkStatus() {
     const response = await chrome.runtime.sendMessage({ action: 'checkHealth' });
     const connected = response?.running;
     statusBadge.classList.toggle('connected', connected);
-    statusText.textContent = connected ? 'Bagli' : 'Baglanti yok';
+    statusText.textContent = connected ? 'Connected' : 'Disconnected';
     downloadBtn.disabled = !connected || !urlInput.value.trim();
   } catch {
     statusBadge.classList.remove('connected');
-    statusText.textContent = 'Baglanti yok';
+    statusText.textContent = 'Disconnected';
     downloadBtn.disabled = true;
   }
 }
@@ -61,7 +61,7 @@ async function downloadUrl(url, filename = null, resolution = null, format = nul
   if (!url) return;
 
   if (url.startsWith('blob:') || url.startsWith('data:')) {
-    showNotification('Bu URL indirilemez', true);
+    showNotification('This URL cannot be downloaded', true);
     return;
   }
 
@@ -78,23 +78,23 @@ async function downloadUrl(url, filename = null, resolution = null, format = nul
       urlInput.value = '';
       videoInfo.style.display = 'none';
       addToHistory(url, filename || url, 'completed');
-      showNotification(resolution ? `${resolution}p indirme baslatildi!` : 'Indirme baslatildi!');
+      showNotification(resolution ? `${resolution}p download started!` : 'Download started!');
     } else {
       addToHistory(url, filename || url, 'error');
-      showNotification(response?.error || 'Indirme baslatilamadi', true);
+      showNotification(response?.error || 'Could not start download', true);
     }
   } catch (error) {
-    showNotification('Hata: ' + error.message, true);
+    showNotification('Error: ' + error.message, true);
   }
 }
 
 // YouTube Modal
 function showYouTubeModal(url, title) {
   pendingYouTubeUrl = url;
-  ytModalTitle.textContent = title || 'Cozunurluk secin';
+  ytModalTitle.textContent = title || 'Select resolution';
   ytModal.classList.add('show');
   
-  // Varsayilan secim
+  // Default selection
   selectedResolution = 720;
   selectedFormat = 'mp4';
   updateResolutionSelection();
@@ -118,7 +118,7 @@ function updateFormatSelection() {
     opt.classList.toggle('active', opt.dataset.format === selectedFormat);
   });
   
-  // MP3 icin cozunurluk gizle
+  // Hide resolution for MP3
   const resOptions = resolutionGrid.querySelectorAll('.resolution-card');
   resOptions.forEach(opt => {
     if (selectedFormat === 'mp3') {
@@ -129,7 +129,7 @@ function updateFormatSelection() {
   });
 }
 
-// Resolution secimi
+// Resolution selection
 resolutionGrid.addEventListener('click', (e) => {
   const option = e.target.closest('.resolution-card');
   if (!option) return;
@@ -137,7 +137,7 @@ resolutionGrid.addEventListener('click', (e) => {
   updateResolutionSelection();
 });
 
-// Format secimi
+// Format selection
 formatToggle.addEventListener('click', (e) => {
   const option = e.target.closest('.format-option');
   if (!option) return;
@@ -145,7 +145,7 @@ formatToggle.addEventListener('click', (e) => {
   updateFormatSelection();
 });
 
-// Modal butonlari
+// Modal buttons
 ytModalCancel.addEventListener('click', hideYouTubeModal);
 
 ytModalDownload.addEventListener('click', () => {
@@ -160,12 +160,12 @@ ytModalDownload.addEventListener('click', () => {
   hideYouTubeModal();
 });
 
-// Modal disina tiklayinca kapat
+// Close on outside click
 ytModal.addEventListener('click', (e) => {
   if (e.target === ytModal) hideYouTubeModal();
 });
 
-// ESC ile kapat
+// Close on ESC
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && ytModal.classList.contains('show')) {
     hideYouTubeModal();
@@ -222,7 +222,7 @@ async function getDetectedLinks() {
     linkList.innerHTML = `
       <div class="empty-state">
         <div class="icon">&#128279;</div>
-        <div class="text">Bu sayfada link algilanamadi</div>
+        <div class="text">No links detected on this page</div>
       </div>`;
     linkCount.textContent = '0';
     batchBar.style.display = 'none';
@@ -240,7 +240,7 @@ function renderLinks(links) {
     linkList.innerHTML = `
       <div class="empty-state">
         <div class="icon">&#128279;</div>
-        <div class="text">${currentFilter === 'all' ? 'Bu sayfada link algilanamadi' : 'Bu turde link bulunamadi'}</div>
+        <div class="text">${currentFilter === 'all' ? 'No links detected on this page' : 'No links of this type found'}</div>
       </div>`;
     return;
   }
@@ -250,7 +250,7 @@ function renderLinks(links) {
     const iconClass = isYT ? 'video' : link.type;
     const icon = isYT ? '&#127909;' : getFileIcon(link.type);
     const label = isYT ? link.text || 'YouTube Video' : escapeHtml(link.filename);
-    const sub = isYT ? 'Cozunurluk secmek icin tiklayin' : escapeHtml(link.url);
+    const sub = isYT ? 'Click to select resolution' : escapeHtml(link.url);
 
     return `
       <div class="link-item" data-url="${escapeHtml(link.url)}" data-type="${iconClass}" data-youtube="${isYT ? '1' : '0'}" data-title="${escapeHtml(link.text || '')}">
@@ -262,7 +262,7 @@ function renderLinks(links) {
           <div class="link-url">${sub}</div>
         </div>
         <div class="link-actions">
-          <button class="action-btn download-single" title="Indir">&#8595;</button>
+          <button class="action-btn download-single" title="Download">&#8595;</button>
         </div>
       </div>
     `;
@@ -347,7 +347,7 @@ function renderHistory() {
     historyList.innerHTML = `
       <div class="empty-state">
         <div class="icon">&#128216;</div>
-        <div class="text">Henuz indirme yok</div>
+        <div class="text">No downloads yet</div>
       </div>`;
     return;
   }
@@ -371,13 +371,13 @@ clearHistoryBtn.addEventListener('click', () => {
 
 // URL input
 urlInput.addEventListener('input', () => {
-  downloadBtn.disabled = !urlInput.value.trim() || statusText.textContent !== 'Bagli';
+  downloadBtn.disabled = !urlInput.value.trim() || statusText.textContent !== 'Connected';
 
   const url = urlInput.value.trim();
   if (url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('youtube.com/shorts/')) {
     videoInfo.style.display = 'block';
     videoTitle.textContent = 'YouTube Video';
-    videoDuration.textContent = 'Cozunurluk secmek icin "Indir" butonuna tiklayin';
+    videoDuration.textContent = 'Click "Download" to select resolution';
   } else {
     videoInfo.style.display = 'none';
   }
@@ -449,17 +449,17 @@ function renderActiveDownloads(downloads) {
     activeDownloads.innerHTML = `
       <div class="empty-state">
         <div class="icon">&#128229;</div>
-        <div class="text">Aktif indirme yok</div>
+        <div class="text">No active downloads</div>
       </div>`;
     return;
   }
   
   activeDownloads.innerHTML = downloads.map(dl => {
-    const statusText = dl.status === 'downloading' ? 'Indiriliyor' :
-                       dl.status === 'queued' ? 'Sirada' :
-                       dl.status === 'paused' ? 'Duraklatildi' : dl.status;
+    const statusText = dl.status === 'downloading' ? 'Downloading' :
+                       dl.status === 'queued' ? 'Queued' :
+                       dl.status === 'paused' ? 'Paused' : dl.status;
     
-    const fileName = dl.fileName || 'Dosya';
+    const fileName = dl.fileName || 'File';
     const progress = dl.progress || 0;
     const downloaded = formatBytes(dl.downloadedBytes);
     const fileSize = dl.fileSize > 0 ? formatBytes(dl.fileSize) : '';

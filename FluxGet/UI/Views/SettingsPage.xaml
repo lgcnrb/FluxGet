@@ -19,8 +19,8 @@
             <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
                 <FontIcon Glyph="&#xE713;" FontSize="28" VerticalAlignment="Center"/>
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Ayarlar" FontSize="28" FontWeight="SemiBold"/>
-                    <TextBlock Text="Uygulama tercihlerini yapilandirin"
+                    <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="Configure application preferences"
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
@@ -30,7 +30,7 @@
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
                     <FontIcon Glyph="&#xE713;" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Genel" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="General" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
@@ -42,11 +42,11 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Varsayilan Indirme Konumu" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="Indirilen dosyalarin kaydedilecegi klasor" FontSize="11"
+                                <TextBlock Text="Default Download Location" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Folder where downloaded files will be saved" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <Button Grid.Column="1" Content="Gozat..."
+                            <Button Grid.Column="1" Content="Browse..."
                                     Margin="12,0,0,0" Click="BrowseButton_Click"/>
                         </Grid>
                         <TextBlock x:Name="PathText" Text="{Binding DefaultDownloadPath}"
@@ -63,12 +63,12 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel>
-                            <TextBlock Text="Otomatik Indirme" FontWeight="SemiBold" FontSize="13"/>
-                            <TextBlock Text="Yeni indirmeleri otomatik olarak baslat" FontSize="11"
+                            <TextBlock Text="Auto Start Downloads" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Automatically start new downloads" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" IsOn="{Binding IsAutoStartDownloads, Mode=TwoWay}"
-                                      OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                                      OnContent="On" OffContent="Off" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
 
@@ -80,21 +80,21 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel>
-                            <TextBlock Text="Bildirimler" FontWeight="SemiBold" FontSize="13"/>
-                            <TextBlock Text="Indirme tamamlaninca bildirim goster" FontSize="11"
+                            <TextBlock Text="Notifications" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Show notification when download completes" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
                         <ToggleSwitch Grid.Column="1" IsOn="{Binding IsShowNotifications, Mode=TwoWay}"
-                                      OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                                      OnContent="On" OffContent="Off" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
             </StackPanel>
 
-            <!-- Indirme Ayarlari -->
+            <!-- Downloads Settings -->
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
                     <FontIcon Glyph="&#xE896;" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Indirmeler" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Downloads" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
@@ -106,8 +106,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Eş Zamanli Maks Indirme" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="Ayni anda kac indirme yapilabilecegi" FontSize="11"
+                                <TextBlock Text="Max Concurrent Downloads" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Number of concurrent downloads" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <TextBlock Grid.Column="1" x:Name="ConcurrentText"
@@ -129,11 +129,11 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Kuresel Hiz Limiti" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="Tum indirmeler icin genel hiz siniri (KB/s)" FontSize="11"
+                                <TextBlock Text="Global Speed Limit" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="General speed limit for all downloads (KB/s)" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <TextBlock Grid.Column="1" x:Name="SpeedLimitText" Text="Sinirsiz"
+                            <TextBlock Grid.Column="1" x:Name="SpeedLimitText" Text="Unlimited"
                                        FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                         </Grid>
                         <Slider x:Name="SpeedLimitSlider" Minimum="0" Maximum="10240"
@@ -148,7 +148,7 @@
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
                     <FontIcon Glyph="&#xE774;" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Tarayici Eklentisi" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Browser Extension" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
@@ -160,15 +160,15 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Tarayici Eklentisini Etkinlestir" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="Tarayicidan dogrudan indirme ekleme destegi" FontSize="11"
+                                <TextBlock Text="Enable Browser Extension" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Direct download from browser support" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <ToggleSwitch Grid.Column="1" IsOn="{Binding IsBrowserExtensionEnabled, Mode=TwoWay}"
-                                          OnContent="Acik" OffContent="Kapali" VerticalAlignment="Center"/>
+                                          OnContent="On" OffContent="Off" VerticalAlignment="Center"/>
                         </Grid>
                         <TextBlock x:Name="ExtensionStatusText"
-                                   Text="{Binding ExtensionStatus, FallbackValue='Durum: Bilinmiyor'}"
+                                   Text="{Binding ExtensionStatus, FallbackValue='Status: Unknown'}"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                    Margin="0,8,0,0" FontSize="12"/>
                     </StackPanel>
@@ -181,8 +181,8 @@
                     CornerRadius="10" Padding="16" Margin="0,8,0,0">
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                        <Button Content="Varsayilanlara Don" Click="ResetDefaultsButton_Click"/>
-                        <Button Content="Kaydet" Style="{StaticResource AccentButtonStyle}" Click="SaveButton_Click"/>
+                        <Button Content="Reset Defaults" Click="ResetDefaultsButton_Click"/>
+                        <Button Content="Save" Style="{StaticResource AccentButtonStyle}" Click="SaveButton_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -81,11 +81,11 @@ public partial class DownloadService : IDownloadService, IDisposable
                     task.Status = DownloadStatus.Pending;
             }
             
-            _logger.LogInformation("Veritabanindan {Count} indirme yuklendi", tasks.Count);
+            _logger.LogInformation("Loaded {Count} downloads from database", tasks.Count);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Veritabanindan indirmeler yuklenemedi");
+            _logger.LogError(ex, "Failed to load downloads from database");
         }
     }
     
@@ -112,7 +112,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Indirme kaydedilemedi: {FileName}", task.FileName);
+            _logger.LogWarning(ex, "Could not save download: {FileName}", task.FileName);
         }
     }
     
@@ -139,7 +139,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Chunk durumlari kaydedilemedi: {FileName}", task.FileName);
+            _logger.LogWarning(ex, "Could not save chunk states: {FileName}", task.FileName);
         }
     }
     
@@ -163,7 +163,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Veritabanindan silinemedi: {TaskId}", taskId);
+            _logger.LogWarning(ex, "Could not delete from database: {TaskId}", taskId);
         }
     }
     
@@ -212,13 +212,13 @@ public partial class DownloadService : IDownloadService, IDisposable
         if (string.IsNullOrEmpty(fileName))
             fileName = "download";
         
-        // Dosya adindaki gecersiz karakterleri temizle
+        // Clean invalid characters from filename
         foreach (char c in Path.GetInvalidFileNameChars())
         {
             fileName = fileName.Replace(c, '_');
         }
         
-        // Kategori otomatik tespiti
+        // Auto-detect category
         if (category == DownloadCategory.General)
         {
             category = Core.Helpers.UrlHelper.DetectCategory(url, contentType);
@@ -262,7 +262,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         
         await SaveAsync(task);
         
-        _logger.LogInformation("Indirme hazirlandi: {FileName} ({FileSize}, {ChunkCount} chunk, Protocol={Protocol})",
+        _logger.LogInformation("Download prepared: {FileName} ({FileSize}, {ChunkCount} chunks, Protocol={Protocol})",
             fileName, FormatBytes(fileSize), task.ChunkCount, protocol);
         
         return task;
@@ -307,17 +307,17 @@ public partial class DownloadService : IDownloadService, IDisposable
                     task.Status = DownloadStatus.Downloading;
                     await SaveAsync(task);
                     
-                    _logger.LogWarning("Yeniden deneniyor ({Attempt}/{Max}): {FileName}",
+                    _logger.LogWarning("Retrying ({Attempt}/{Max}): {FileName}",
                         attempt, maxRetries, task.FileName);
                 }
                 else
                 {
-                    _logger.LogInformation("Indirme baslatildi: {FileName} ({ChunkCount} chunk)", task.FileName, task.ChunkCount);
+                    _logger.LogInformation("Download started: {FileName} ({ChunkCount} chunks)", task.FileName, task.ChunkCount);
                 }
                 
                 await StartDownloadInternalAsync(task, httpClient, cts.Token);
                 
-                // Basarili
+                // Success
                 lastException = null;
                 break;
             }
@@ -326,7 +326,7 @@ public partial class DownloadService : IDownloadService, IDisposable
                 if (task.Status == DownloadStatus.Downloading)
                 {
                     task.Status = DownloadStatus.Paused;
-                    _logger.LogInformation("Indirme duraklatildi: {FileName}", task.FileName);
+                    _logger.LogInformation("Download paused: {FileName}", task.FileName);
                 }
                 lastException = null;
                 break;
@@ -334,13 +334,13 @@ public partial class DownloadService : IDownloadService, IDisposable
             catch (Exception ex)
             {
                 lastException = ex;
-                _logger.LogWarning(ex, "Indirme hatasi ({Attempt}/{Max}): {FileName} - {Error}",
+                _logger.LogWarning(ex, "Download error ({Attempt}/{Max}): {FileName} - {Error}",
                     attempt + 1, maxRetries + 1, task.FileName, ex.Message);
                 
                 if (attempt < maxRetries)
                 {
                     var delay = CalculateRetryDelay(attempt + 1);
-                    _logger.LogInformation("{Delay}s sonra yeniden denenecek...", delay.TotalSeconds);
+                    _logger.LogInformation("{Delay}s until retry...", delay.TotalSeconds);
                     await Task.Delay(delay, CancellationToken.None);
                 }
             }
@@ -355,7 +355,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         {
             task.Status = DownloadStatus.Error;
             task.ErrorCode = lastException.Message;
-            _logger.LogError(lastException, "Indirme kalici olarak basarisiz: {FileName}", task.FileName);
+            _logger.LogError(lastException, "Download permanently failed: {FileName}", task.FileName);
         }
         
         task.UpdatedAt = DateTime.UtcNow;
@@ -389,7 +389,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             await cts.CancelAsync();
             await SaveAsync(task);
             await SaveChunksAsync(task);
-            _logger.LogInformation("Indirme duraklatildi: {FileName}", task.FileName);
+            _logger.LogInformation("Download paused: {FileName}", task.FileName);
         }
     }
     
@@ -418,7 +418,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         if (File.Exists(task.FilePath))
         {
             try { File.Delete(task.FilePath); }
-            catch (Exception ex) { _logger.LogWarning(ex, "Dosya silinemedi: {FilePath}", task.FilePath); }
+            catch (Exception ex) {             _logger.LogWarning(ex, "Could not delete file: {FilePath}", task.FilePath); }
         }
         
         task.Chunks?.Clear();
@@ -498,7 +498,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         newChunkCount = Math.Clamp(newChunkCount, 1, 16);
         if (task.ChunkCount != newChunkCount)
         {
-            _logger.LogInformation("Chunk sayisi degistirildi: {FileName}: {Old} -> {New}",
+            _logger.LogInformation("Chunk count changed: {FileName}: {Old} -> {New}",
                 task.FileName, task.ChunkCount, newChunkCount);
             task.ChunkCount = newChunkCount;
         }
@@ -520,19 +520,19 @@ public partial class DownloadService : IDownloadService, IDisposable
         {
             if (!hasChunkProgress)
             {
-                _logger.LogInformation("Chunk indirmesi: {ChunkCount} chunk, {FileSize}", task.ChunkCount, FormatBytes(task.FileSize));
+                _logger.LogInformation("Starting chunk download: {ChunkCount} chunks, {FileSize}", task.ChunkCount, FormatBytes(task.FileSize));
                 await CreateChunksAsync(task);
             }
             else
             {
-                _logger.LogInformation("Chunk devam ettiriliyor: {FileName}", task.FileName);
+                _logger.LogInformation("Resuming chunk download: {FileName}", task.FileName);
             }
             
             await DownloadWithChunksAsync(task, httpClient, cancellationToken);
         }
         else
         {
-            _logger.LogInformation("Tek baglanti indirmesi (Range={Supports}, Size={Size})", task.SupportsResume, FormatBytes(task.FileSize));
+            _logger.LogInformation("Single connection download (Range={Supports}, Size={Size})", task.SupportsResume, FormatBytes(task.FileSize));
             await DownloadSingleAsync(task, httpClient, cancellationToken);
         }
         
@@ -543,7 +543,7 @@ public partial class DownloadService : IDownloadService, IDisposable
                 var isValid = await VerifyFileHashAsync(task);
                 if (!isValid)
                 {
-                    throw new InvalidOperationException($"Hash dogrulama basarisiz: {task.FileName}");
+                    throw new InvalidOperationException($"Hash verification failed: {task.FileName}");
                 }
             }
             
@@ -555,7 +555,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             await SaveAsync(task);
             
             var duration = task.StartedAt.HasValue ? DateTime.UtcNow - task.StartedAt.Value : TimeSpan.Zero;
-            _logger.LogInformation("Indirme tamamlandi: {FileName} ({Duration})", task.FileName, duration.ToString(@"mm\:ss"));
+            _logger.LogInformation("Download completed: {FileName} ({Duration})", task.FileName, duration.ToString(@"mm\:ss"));
         }
     }
     
@@ -620,7 +620,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         
         try
         {
-            // Chunk basarisizsa sirayla yeniden dene
+            // Chunk failed, retry sequentially
             var chunkRetryCount = 0;
             var maxChunkRetries = 3;
             
@@ -645,7 +645,7 @@ public partial class DownloadService : IDownloadService, IDisposable
                     if (chunkRetryCount <= maxChunkRetries)
                     {
                         var delay = CalculateRetryDelay(chunkRetryCount);
-                        _logger.LogWarning(ex, "Chunk {ChunkIndex} basarisiz, {Delay}s sonra yeniden denenecek ({Retry}/{Max}): {FileName}",
+                        _logger.LogWarning(ex, "Chunk {ChunkIndex} failed, retrying in {Delay}s ({Retry}/{Max}): {FileName}",
                             chunk.ChunkIndex, delay.TotalSeconds, chunkRetryCount, maxChunkRetries, task.FileName);
                         
                         await Task.Delay(delay, cancellationToken);
@@ -653,7 +653,7 @@ public partial class DownloadService : IDownloadService, IDisposable
                     else
                     {
                         chunk.Status = ChunkStatus.Error;
-                        _logger.LogError(ex, "Chunk {ChunkIndex} kalici olarak basarisiz: {FileName}", chunk.ChunkIndex, task.FileName);
+                        _logger.LogError(ex, "Chunk {ChunkIndex} permanently failed: {FileName}", chunk.ChunkIndex, task.FileName);
                         throw;
                     }
                 }
@@ -672,7 +672,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         chunk.Status = ChunkStatus.Downloading;
         chunk.StartedAt = DateTime.UtcNow;
         
-        _logger.LogInformation("Chunk {Index} indirmesi baslatiliyor: {StartByte}-{EndByte} (Range)", chunk.ChunkIndex, chunk.StartByte, chunk.EndByte);
+        _logger.LogInformation("Starting chunk {Index} download: {StartByte}-{EndByte} (Range)", chunk.ChunkIndex, chunk.StartByte, chunk.EndByte);
         
         var request = new HttpRequestMessage(HttpMethod.Get, task.Url);
         var rangeStart = chunk.StartByte + chunk.DownloadedBytes;
@@ -680,14 +680,14 @@ public partial class DownloadService : IDownloadService, IDisposable
         
         using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         
-        _logger.LogInformation("Chunk {Index} yanit alindi: {StatusCode}, ContentLength={Length}", 
+        _logger.LogInformation("Chunk {Index} response received: {StatusCode}, ContentLength={Length}", 
             chunk.ChunkIndex, response.StatusCode, response.Content.Headers.ContentLength);
         
         response.EnsureSuccessStatusCode();
         
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         
-        // Dosya kilitleme - ayni dosyaya paralel yazma icin
+        // File lock - for parallel writes to same file
         var fileLock = _chunkFileLocks.GetOrAdd(task.Id, _ => new object());
         
         var buffer = new byte[65536]; // 64KB buffer
@@ -717,7 +717,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             chunkTotalRead += bytesRead;
             chunk.DownloadedBytes = chunkTotalRead;
             
-            // Task-level UI throttle: 500ms'de bir, tum chunk'lar icin tek guncelleme
+            // Task-level UI throttle: update once every 500ms for all chunks
             var nowTicks = Stopwatch.GetTimestamp();
             var lastTicks = _taskLastUiUpdateTicks.GetValueOrDefault(task.Id, 0);
             var elapsedMs = (nowTicks - lastTicks) * 1000.0 / Stopwatch.Frequency;
@@ -742,7 +742,7 @@ public partial class DownloadService : IDownloadService, IDisposable
                 EmitProgress(task);
             }
             
-            // Her 10 saniyede bir chunk durumunu DB'ye kaydet
+            // Save chunk states to DB every 10 seconds
             if ((stopwatch.Elapsed - lastDbSave).TotalSeconds >= 10)
             {
                 _ = SaveChunksAsync(task);
@@ -750,7 +750,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             }
         }
         
-        _logger.LogInformation("Chunk {Index} tamamlandi: {TotalBytes} bytes", chunk.ChunkIndex, chunkTotalRead);
+        _logger.LogInformation("Chunk {Index} completed: {TotalBytes} bytes", chunk.ChunkIndex, chunkTotalRead);
         
         chunk.Status = ChunkStatus.Completed;
         chunk.CompletedAt = DateTime.UtcNow;
@@ -758,7 +758,7 @@ public partial class DownloadService : IDownloadService, IDisposable
     
     private async Task DownloadSingleAsync(DownloadTask task, HttpClient httpClient, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Tek baglanti indirmesi baslatiliyor: {FileName}, DownloadedBytes={Downloaded}, SupportsResume={Resume}",
+        _logger.LogInformation("Starting single connection download: {FileName}, DownloadedBytes={Downloaded}, SupportsResume={Resume}",
             task.FileName, task.DownloadedBytes, task.SupportsResume);
         
         var request = new HttpRequestMessage(HttpMethod.Get, task.Url);
@@ -766,12 +766,12 @@ public partial class DownloadService : IDownloadService, IDisposable
         if (task.DownloadedBytes > 0 && task.SupportsResume)
         {
             request.Headers.Range = new RangeHeaderValue(task.DownloadedBytes, null);
-            _logger.LogInformation("Range header eklendi: {Start}-*", task.DownloadedBytes);
+            _logger.LogInformation("Range header added: {Start}-*", task.DownloadedBytes);
         }
         
         using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         
-        _logger.LogInformation("Yanit alindi: {StatusCode}, ContentLength={Length}", 
+        _logger.LogInformation("Response received: {StatusCode}, ContentLength={Length}", 
             response.StatusCode, response.Content.Headers.ContentLength);
         
         response.EnsureSuccessStatusCode();
@@ -811,7 +811,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             sessionBytesRead += bytesRead;
             totalRead += bytesRead;
             
-            // Task-level UI throttle: 500ms'de bir guncelle
+            // Task-level UI throttle: update every 500ms
             var nowTicks = Stopwatch.GetTimestamp();
             var lastTicks = _taskLastUiUpdateTicks.GetValueOrDefault(task.Id, 0);
             var elapsedMs = (nowTicks - lastTicks) * 1000.0 / Stopwatch.Frequency;
@@ -890,7 +890,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Dosya bilgisi alinamadi: {Url}", url);
+            _logger.LogWarning(ex, "File info could not be retrieved: {Url}", url);
             
             try
             {
@@ -931,13 +931,13 @@ public partial class DownloadService : IDownloadService, IDisposable
             
             var isValid = computedHash == task.ExpectedHash?.ToLower();
             
-            _logger.LogInformation("Hash dogrulama: {FileName}: {Result}", task.FileName, isValid ? "BASARILI" : "BASARISIZ");
+            _logger.LogInformation("Hash verification: {FileName}: {Result}", task.FileName, isValid ? "PASSED" : "FAILED");
             
             return isValid;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Hash dogrulama basarisiz: {FileName}", task.FileName);
+            _logger.LogError(ex, "Hash verification failed: {FileName}", task.FileName);
             return false;
         }
     }

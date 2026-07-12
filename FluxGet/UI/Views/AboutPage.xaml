@@ -19,8 +19,8 @@
             <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
                 <FontIcon Glyph="&#xE946;" FontSize="28" VerticalAlignment="Center"/>
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Hakkinda" FontSize="28" FontWeight="SemiBold"/>
-                    <TextBlock Text="FluxGet hakkinda bilgiler"
+                    <TextBlock Text="About" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="Information about FluxGet"
                                FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
             </StackPanel>
@@ -47,7 +47,7 @@
                         <TextBlock Text="FluxGet" FontSize="24" FontWeight="Bold"/>
                         <TextBlock x:Name="VersionText" FontSize="14"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="Gelismis indirme yoneticisi. Hizli, guvenilir, akillica."
+                        <TextBlock Text="Advanced download manager. Fast, reliable, smart."
                                    FontSize="13" Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                    Margin="0,4,0,0"/>
                     </StackPanel>
@@ -61,7 +61,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
                         <FontIcon Glyph="&#xE770;" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="Sistem Bilgisi" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="System Information" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Spacing="8">
@@ -115,7 +115,7 @@
                                 <ColumnDefinition Width="160"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Indirme Motoru" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Download Engine" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Text="Parallel Chunk / HttpClient" VerticalAlignment="Center"/>
                         </Grid>
 
@@ -124,7 +124,7 @@
                                 <ColumnDefinition Width="160"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="YouTube Entegrasyonu" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="YouTube Integration" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Text="yt-dlp + ffmpeg" VerticalAlignment="Center"/>
                         </Grid>
 
@@ -133,7 +133,7 @@
                                 <ColumnDefinition Width="160"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Tarayici Eklentisi" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Browser Extension" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Text="Chrome Manifest v3" VerticalAlignment="Center"/>
                         </Grid>
                     </StackPanel>
@@ -147,22 +147,22 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
                         <FontIcon Glyph="&#xE945;" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="Ozellikler" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="Features" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Spacing="6">
-                        <TextBlock Text="  &#x2022;  Cok baglantili paralel indirme (chunk destekli)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Duraklat / Devam / Yeniden Dene" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Kuresel ve indirme bazli hiz limiti" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Oncelikli kuyruk sistemi" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Otomatik kategori tespiti" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Dosya hash dogrulama (SHA256/SHA1/MD5)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  YouTube video/MP3 indirme (otomatik birlestirme)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Cerez bazli YouTube oturum destegi" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Tarayici eklentisi entegrasyonu" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Pano URL algilama" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  Surukle-birak ile indirme" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="  &#x2022;  SQLite veritabani ile kalici depolama" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Multi-connection parallel download (chunk supported)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Pause / Resume / Retry" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Global and per-download speed limit" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Priority queue system" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Automatic category detection" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  File hash verification (SHA256/SHA1/MD5)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  YouTube video/MP3 download (auto-merge)" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Cookie-based YouTube session support" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Browser extension integration" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Clipboard URL detection" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Drag and drop download" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="  &#x2022;  Persistent storage with SQLite database" FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -174,9 +174,9 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
                         <FontIcon Glyph="&#xE71B;" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="Lisans" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="License" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <TextBlock Text="MIT Lisansi - Ucretsiz ve acik kaynak"
+                    <TextBlock Text="MIT License - Free and open source"
                                FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock Text="Copyright (c) 2026 FluxGet"
                                FontSize="12" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,4,0,0"/>
@@ -190,7 +190,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
                         <FontIcon Glyph="&#xE8D6;" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="Teknolojiler" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="Technologies" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
                     <TextBlock Text="C# 12, .NET 8, Windows App SDK 1.6, WinUI 3, Entity Framework Core, System.Reactive, CommunityToolkit.Mvvm, yt-dlp, ffmpeg"
                                FontSize="12" TextWrapping="Wrap"
@@ -205,10 +205,10 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
                         <FontIcon Glyph="&#xE716;" FontSize="14" VerticalAlignment="Center"/>
-                        <TextBlock Text="Ucuncu Taraf Araclar" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="Third Party Tools" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <TextBlock Text="yt-dlp - YouTube video indirme motoru (Unlicense)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
-                    <TextBlock Text="ffmpeg - Ses/goruntu donusturme araci (LGPL/GPL)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="yt-dlp - YouTube video download engine (Unlicense)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                    <TextBlock Text="ffmpeg - Audio/video conversion tool (LGPL/GPL)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
             </Border>
         </StackPanel>

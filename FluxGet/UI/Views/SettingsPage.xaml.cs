@@ -62,7 +62,7 @@ public sealed partial class SettingsPage : Page
         }
         else
         {
-            SpeedLimitText.Text = "Sinirsiz";
+            SpeedLimitText.Text = "Unlimited";
         }
     }
     
@@ -70,18 +70,18 @@ public sealed partial class SettingsPage : Page
     {
         if (_viewModel.IsBrowserExtensionRunning)
         {
-            ExtensionStatusText.Text = "Durum: Aktif - Sunucu calisiyor";
+            ExtensionStatusText.Text = "Status: Active - Server running";
         }
         else
         {
-            ExtensionStatusText.Text = "Durum: Pasif";
+            ExtensionStatusText.Text = "Status: Inactive";
         }
     }
     
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         await _viewModel.SaveSettingsCommand.ExecuteAsync(null);
-        await ShowInfoDialog("Kaydedildi", "Ayarlar basariyla kaydedildi.");
+        await ShowInfoDialog("Saved", "Settings saved successfully.");
     }
     
     private void ResetDefaultsButton_Click(object sender, RoutedEventArgs e)
@@ -98,13 +98,13 @@ public sealed partial class SettingsPage : Page
             {
                 Title = title,
                 Content = message,
-                CloseButtonText = "Tamam",
+                CloseButtonText = "OK",
                 XamlRoot = App.MainWindow.Content.XamlRoot
             }.ShowAsync();
         }
         catch
         {
-            // Dialog zaten aciksa veya XamlRoot gecersizse atla
+            // Skip if dialog is already open or XamlRoot is invalid
         }
     }
 }

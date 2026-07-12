@@ -21,12 +21,12 @@
             <FontIcon Glyph="&#xE8A7;" FontSize="28" VerticalAlignment="Center"/>
             <StackPanel Spacing="4">
                 <TextBlock 
-                    Text="Indirme Kuyrugu" 
+                    Text="Download Queue" 
                     FontSize="28" 
                     FontWeight="SemiBold"/>
                 <TextBlock 
                     x:Name="QueueStatusText"
-                    Text="0 kuyrukta, 0 aktif"
+                    Text="0 queued, 0 active"
                     FontSize="12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             </StackPanel>
@@ -45,7 +45,7 @@
                     
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock 
-                            Text="Maks Es Zamanli:" 
+                            Text="Max Concurrent:" 
                             FontWeight="SemiBold"
                             VerticalAlignment="Center"
                             Margin="0,0,12,0"/>
@@ -58,10 +58,10 @@
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Button Content="Uygula" Click="ApplyButton_Click"
+                        <Button Content="Apply" Click="ApplyButton_Click"
                                 Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0"/>
-                        <Button Content="Kuyrugu Durdur" Click="PauseQueueButton_Click" Margin="0,0,8,0"/>
-                        <Button Content="Kuyrugu Devam Ettir" Click="ResumeQueueButton_Click"/>
+                        <Button Content="Pause Queue" Click="PauseQueueButton_Click" Margin="0,0,8,0"/>
+                        <Button Content="Resume Queue" Click="ResumeQueueButton_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -82,12 +82,12 @@
                         <ColumnDefinition Width="160"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="#" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="1" Text="Sira" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="2" Text="Dosya Adi" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="3" Text="Boyut" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="4" Text="Oncelik" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="5" Text="Durum" FontWeight="SemiBold" FontSize="12"/>
-                    <TextBlock Grid.Column="6" Text="Islemler" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="1" Text="Order" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="2" Text="File Name" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="3" Text="Size" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="4" Text="Priority" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="5" Text="Status" FontWeight="SemiBold" FontSize="12"/>
+                    <TextBlock Grid.Column="6" Text="Actions" FontWeight="SemiBold" FontSize="12"/>
                 </Grid>
             </Border>
         </Grid>
@@ -153,23 +153,23 @@
                         
                         <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Click="MoveUpButton_Click" Padding="6" Margin="0,0,4,0"
-                                    ToolTipService.ToolTip="Yukari Tas">
+                                    ToolTipService.ToolTip="Move Up">
                                 <FontIcon Glyph="&#xE70E;" FontSize="12"/>
                             </Button>
                             <Button Click="MoveDownButton_Click" Padding="6" Margin="0,0,4,0"
-                                    ToolTipService.ToolTip="Asagi Tas">
+                                    ToolTipService.ToolTip="Move Down">
                                 <FontIcon Glyph="&#xE70D;" FontSize="12"/>
                             </Button>
                             <Button Click="PriorityUpButton_Click" Padding="6" Margin="0,0,4,0"
-                                    ToolTipService.ToolTip="Onceligi Artir">
+                                    ToolTipService.ToolTip="Increase Priority">
                                 <FontIcon Glyph="&#xE73A;" FontSize="12"/>
                             </Button>
                             <Button Click="PriorityDownButton_Click" Padding="6" Margin="0,0,4,0"
-                                    ToolTipService.ToolTip="Onceligi Azalt">
+                                    ToolTipService.ToolTip="Decrease Priority">
                                 <FontIcon Glyph="&#xE73B;" FontSize="12"/>
                             </Button>
                             <Button Click="RemoveButton_Click" Padding="6"
-                                    ToolTipService.ToolTip="Kuyruktan Cikar">
+                                    ToolTipService.ToolTip="Remove from Queue">
                                 <FontIcon Glyph="&#xE711;" FontSize="12"/>
                             </Button>
                         </StackPanel>
@@ -186,9 +186,9 @@
             HorizontalAlignment="Center">
             <FontIcon Glyph="&#xE896;" FontSize="48" HorizontalAlignment="Center"
                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-            <TextBlock Text="Kuyruk bos" FontSize="18" HorizontalAlignment="Center"
+            <TextBlock Text="Queue is empty" FontSize="18" HorizontalAlignment="Center"
                        Margin="0,12,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <TextBlock Text="Indirmeleri kuyruga eklemek icin 'Yeni Indirme' kullanin"
+            <TextBlock Text="Use 'New Download' to add downloads to the queue"
                        FontSize="13" HorizontalAlignment="Center"
                        Foreground="{ThemeResource TextFillColorTertiaryBrush}" Margin="0,4,0,0"/>
         </StackPanel>
@@ -200,11 +200,11 @@
             HorizontalAlignment="Right"
             Padding="32,16,32,20">
             <Button 
-                Content="Kuyrugu Temizle"
+                Content="Clear Queue"
                 Click="ClearQueueButton_Click"
                 Margin="0,0,8,0"/>
             <Button 
-                Content="Tumunu Indirmeyi Baslat"
+                Content="Start All Downloads"
                 Style="{StaticResource AccentButtonStyle}"
                 Click="StartAllButton_Click"/>
         </StackPanel>

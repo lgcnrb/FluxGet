@@ -19,8 +19,8 @@
             <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
                 <FontIcon Glyph="&#xE74E;" FontSize="28" VerticalAlignment="Center"/>
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Araclar" FontSize="28" FontWeight="SemiBold"/>
-                    <TextBlock Text="YouTube indirme ve donusturme araclarini yonetin"
+                    <TextBlock Text="Tools" FontSize="28" FontWeight="SemiBold"/>
+                    <TextBlock Text="Manage YouTube download and conversion tools"
                                FontSize="12"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
@@ -42,11 +42,11 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="YouTube Video Indirme Motoru" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="YouTube, Vimeo ve diger video sitelerinden indirme destegi" FontSize="11"
+                                <TextBlock Text="YouTube Video Download Engine" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Download support for YouTube, Vimeo and other video sites" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <TextBlock Grid.Column="1" x:Name="YtDlpStatusText" Text="Kontrol ediliyor..."
+                            <TextBlock Grid.Column="1" x:Name="YtDlpStatusText" Text="Checking..."
                                        FontSize="12" VerticalAlignment="Center" FontWeight="SemiBold"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </Grid>
@@ -57,11 +57,11 @@
                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                    Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button x:Name="YtDlpSelectButton" Content="Dosya Sec" Click="YtDlpSelectButton_Click"
-                                    Padding="12,6"/>
-                            <Button Content="Indir (GitHub)" Click="YtDlpDownloadButton_Click"
-                                    Padding="12,6"/>
-                            <Button x:Name="YtDlpCheckUpdateButton" Content="Yeni Surum var mi?"
+<Button x:Name="YtDlpSelectButton" Content="Select File" Click="YtDlpSelectButton_Click"
+                                     Padding="12,6"/>
+                            <Button Content="Download (GitHub)" Click="YtDlpDownloadButton_Click"
+                                     Padding="12,6"/>
+                            <Button x:Name="YtDlpCheckUpdateButton" Content="Check for Updates?"
                                     Click="YtDlpCheckUpdateButton_Click" Padding="12,6"/>
                         </StackPanel>
                     </StackPanel>
@@ -84,11 +84,11 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Ses Donusturme Araci" FontWeight="SemiBold" FontSize="13"/>
-                                <TextBlock Text="YouTube videolarindan MP3 ses dosyasi olusturma" FontSize="11"
+                                <TextBlock Text="Audio Conversion Tool" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Create MP3 audio files from YouTube videos" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <TextBlock Grid.Column="1" x:Name="FfmpegStatusText" Text="Kontrol ediliyor..."
+                            <TextBlock Grid.Column="1" x:Name="FfmpegStatusText" Text="Checking..."
                                        FontSize="12" VerticalAlignment="Center" FontWeight="SemiBold"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </Grid>
@@ -99,11 +99,11 @@
                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                    Visibility="Collapsed"/>
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button x:Name="FfmpegSelectButton" Content="Dosya Sec" Click="FfmpegSelectButton_Click"
-                                    Padding="12,6"/>
-                            <Button Content="Indir (GitHub)" Click="FfmpegDownloadButton_Click"
-                                    Padding="12,6"/>
-                            <Button x:Name="FfmpegCheckUpdateButton" Content="Yeni Surum var mi?"
+<Button x:Name="FfmpegSelectButton" Content="Select File" Click="FfmpegSelectButton_Click"
+                                     Padding="12,6"/>
+                            <Button Content="Download (GitHub)" Click="FfmpegDownloadButton_Click"
+                                     Padding="12,6"/>
+                            <Button x:Name="FfmpegCheckUpdateButton" Content="Check for Updates?"
                                     Click="FfmpegCheckUpdateButton_Click" Padding="12,6"/>
                         </StackPanel>
                     </StackPanel>
@@ -114,7 +114,7 @@
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
                     <FontIcon Glyph="&#xE8B7;" FontSize="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Aracl Klasoru" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="Tools Folder" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Border Padding="16" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
@@ -125,11 +125,11 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel>
-                            <TextBlock Text="Aracl Dosyalari Konumu" FontWeight="SemiBold" FontSize="13"/>
-                            <TextBlock Text="yt-dlp ve ffmpeg dosyalarinin saklandigi klasor" FontSize="11"
+<TextBlock Text="Tool Files Location" FontWeight="SemiBold" FontSize="13"/>
+                                <TextBlock Text="Folder where yt-dlp and ffmpeg files are stored" FontSize="11"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,0"/>
                         </StackPanel>
-                        <Button Grid.Column="1" Content="Klasoru Ac" Click="OpenToolsFolderButton_Click"
+                        <Button Grid.Column="1" Content="Open Folder" Click="OpenToolsFolderButton_Click"
                                 Padding="12,4" Margin="12,0,0,0"/>
                     </Grid>
                 </Border>

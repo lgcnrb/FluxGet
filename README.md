@@ -1,148 +1,148 @@
 # FluxGet
 
-**Gelismis indirme yoneticisi. Hizli, guvenilir, akillica.**
+**Advanced download manager. Fast, reliable, smart.**
 
-WinUI 3 ve .NET 8 ile yazilmis, IDM benzeri gucllu bir indirme yoneticisi. Paralel chunk indirme, YouTube destegi, tarayici eklentisi ve oncelikli kuyruk sistemi.
-
----
-
-## Ekran Goruntusu
-
-> yakinda eklenecek
+A powerful IDM-like download manager built with WinUI 3 and .NET 8. Features parallel chunk downloads, YouTube support, browser extension, and priority queue system.
 
 ---
 
-## Ozellikler
+## Screenshot
 
-### Indirme Motoru
-- **Paralel Chunk Indirme** - Tek dosyayi birden fazla paralel baglantiyla indirme
-- **Duraklat / Devam / Iptal** - Indirmeleri istediginiz zaman durdurun ve devam ettirin
-- **Otomatik Yeniden Deneme** - Hatalarda otomatik yeniden deneme (exponential backoff)
-- **Resume Destegi** - Yarim kalan indirmeleri kaldigi yerden devam ettirme
-- **Hash Dogrulama** - SHA256/SHA1/MD5 ile dosya butunlugu dogrulama
-
-### Hiz ve Kontrol
-- **Kuresel Hiz Limiti** - Tum indirmeler icin genel hiz siniri
-- **Indirme Bazli Hiz Limiti** - Her indirme icin ayri hiz siniri
-- **Oncelikli Kuyruk** - Indirmeleri oncelige gore siralayin (0-10)
-- **Es Zamanli Indirme Sayisi** - Ayn anda kac indirme yapilacagini ayarlayin (1-20)
-
-### YouTube Destegi
-- **Video Indirme** - 360p'den 2160p'ye kadar cozunurluk secenekleri
-- **MP3 Donusturme** - YouTube videolarindan ses dosyasi olusturma
-- **yt-dlp Entegrasyonu** - Gucllu YouTube indirme motoru
-- **ffmpeg Destegi** - Ses/goruntu donusturme araci
-
-### Tarayici Eklentisi
-- **Chrome Manifest v3** - Modern tarayici eklentisi standartlari
-- **Tek Tikla Indirme** - Tarayicidan dogrudan indirme ekleme
-- **YouTube Algilama** - YouTube sayfalarinda cozunurluk secici modal
-- **Indirme Gecmisi** - Tarayicida indirme gecmisini saklama
-- **Sag Tik Menusu** - Link, video, gorsel ve sayfa uzerinde sag tik destegi
-
-### Arayuz
-- **Karanlik Tema** - Goze yakin karanlik arayuz
-- **Modern WinUI 3 Tasarimi** - Fluent Design System
-- **Surukle-Birak** - URL'leri surukleyip birakarak indirme
-- **Pano URL Algilama** - Panodaki URL'leri otomatik algilama
-- **Bildirimler** - Indirme tamamlaninca bildirim gosterme
+> Coming soon
 
 ---
 
-## Mimari
+## Features
+
+### Download Engine
+- **Parallel Chunk Downloads** - Split files into multiple parallel connections for faster speeds
+- **Pause / Resume / Cancel** - Full control over your downloads
+- **Auto Retry** - Automatic retry on failures with exponential backoff
+- **Resume Support** - Continue interrupted downloads from where they left off
+- **Hash Verification** - SHA256/SHA1/MD5 file integrity verification
+
+### Speed & Control
+- **Global Speed Limit** - Set overall speed cap for all downloads
+- **Per-Download Speed Limit** - Individual speed limits per download
+- **Priority Queue** - Order downloads by priority (0-10)
+- **Concurrent Downloads** - Configure max simultaneous downloads (1-20)
+
+### YouTube Support
+- **Video Downloads** - Resolution options from 360p to 2160p
+- **MP3 Conversion** - Extract audio from YouTube videos
+- **yt-dlp Integration** - Powerful YouTube download engine
+- **ffmpeg Support** - Audio/video conversion tool
+
+### Browser Extension
+- **Chrome Manifest v3** - Modern browser extension standards
+- **One-Click Downloads** - Add downloads directly from browser
+- **YouTube Detection** - Resolution picker modal on YouTube pages
+- **Download History** - Save download history in browser
+- **Context Menu** - Right-click support for links, videos, images, and pages
+
+### Interface
+- **Dark Theme** - Easy on the eyes dark UI
+- **Modern WinUI 3 Design** - Fluent Design System
+- **Drag & Drop** - Download by dragging and dropping URLs
+- **Clipboard Detection** - Auto-detect URLs from clipboard
+- **Notifications** - Download completion notifications
+
+---
+
+## Architecture
 
 ```
 FluxGet/
 ├── Core/
 │   ├── Data/           # EF Core DbContext
-│   ├── Helpers/        # Yardimci siniflar
-│   ├── Models/         # Veri modelleri
-│   ├── Security/       # Giris dogrulama, token, sanitizer
-│   └── Services/       # Is mantigi servisleri
+│   ├── Helpers/        # Utility classes
+│   ├── Models/         # Data models
+│   ├── Security/       # Auth, token, sanitizer
+│   └── Services/       # Business logic services
 ├── UI/
-│   ├── Converters/     # XAML donusturuculeri
-│   ├── ViewModels/     # MVVM ViewModel'ler
-│   └── Views/          # WinUI 3 sayfalari
-├── BrowserExtension/   # Chrome tarayici eklentisi
-└── Assets/             # Uygulama resimleri
+│   ├── Converters/     # XAML value converters
+│   ├── ViewModels/     # MVVM ViewModels
+│   └── Views/          # WinUI 3 pages
+├── BrowserExtension/   # Chrome browser extension
+└── Assets/             # Application assets
 ```
 
 ---
 
-## Teknolojiler
+## Tech Stack
 
-| Teknoloji | Surum | Amac |
-|-----------|-------|------|
-| C# | 12 | Programlama dili |
-| .NET | 8.0 | Calistirma platformu |
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| C# | 12 | Programming language |
+| .NET | 8.0 | Runtime platform |
 | Windows App SDK | 2.2 | WinUI 3 framework |
-| WinUI | 3 | Kullanici arayuzu |
-| Entity Framework Core | 8.0 | Veritabani ORM (SQLite) |
-| CommunityToolkit.Mvvm | 8.2 | MVVM altyapisi |
-| System.Reactive | 6.0 | Reaktif programlama |
-| yt-dlp | - | YouTube video indirme |
-| ffmpeg | - | Ses/goruntu donusturme |
+| WinUI | 3 | User interface |
+| Entity Framework Core | 8.0 | Database ORM (SQLite) |
+| CommunityToolkit.Mvvm | 8.2 | MVVM infrastructure |
+| System.Reactive | 6.0 | Reactive programming |
+| yt-dlp | - | YouTube video downloading |
+| ffmpeg | - | Audio/video conversion |
 
 ---
 
-## Gereksinimler
+## Requirements
 
-- **Isletim Sistemi**: Windows 10 (surum 1809 / build 17763) veya uzeri
-- **Platform**: x64, x86 veya ARM64
+- **OS**: Windows 10 (version 1809 / build 17763) or later
+- **Platform**: x64, x86, or ARM64
 - **.NET**: .NET 8.0 Runtime
-- **Disk**: Minimum 100 MB bos alan
-- **Internet**: Indirme ve YouTube icin gerekli
+- **Disk**: Minimum 100 MB free space
+- **Internet**: Required for downloads and YouTube
 
 ---
 
-## Kurulum
+## Installation
 
-### Yontem 1: Kaynak Kodundan
+### Method 1: From Source
 
 ```bash
-# Depoyu klonlayin
+# Clone the repository
 git clone https://github.com/lgcnrb/FluxGet.git
 cd FluxGet
 
-# Derleyin
+# Build
 dotnet build -p:Platform=x64
 
-# Calistirin
+# Run
 dotnet run --project FluxGet -p:Platform=x64
 ```
 
-### Yontem 2: Yayinlanan Surum
+### Method 2: Released Version
 
-1. [Releases](https://github.com/lgcnrb/FluxGet/releases) sayfasindan en son surumu indirin
-2. `.msix` veya `.appxbundle` dosyasini calistirin
-3. Yolu izleyerek kurulumu tamamlayin
-
----
-
-## Baslangic
-
-1. Uygulamayi acin
-2. **Araclar** sayfasindan `yt-dlp` ve `ffmpeg` dosyalarini secin (YouTube icin gerekli)
-3. **Ayarlar** sayfasindan varsayilan indirme konumunu ayarlayin
-4. **Tarayici Eklentisi** sayfasindan Chrome eklentisini kurun (opsiyonel)
-5. Bir URL yapistirin veya surukleyip birakin!
+1. Download the latest version from [Releases](https://github.com/lgcnrb/FluxGet/releases)
+2. Run the `.msix` or `.appxbundle` file
+3. Follow the installation wizard
 
 ---
 
-## Tarayici Eklentisi Kurumu
+## Getting Started
 
-1. `FluxGet/BrowserExtension` klasorunu bir yere kopyalayin
-2. Chrome'da `chrome://extensions/` adresine gidin
-3. "Gelistirici modu"nu acin
-4. "Yuklenmis uzantiyi yukle"ye tiklayin
-5. FluxGet klasorunu secin
-6. Eklenti hazir!
+1. Launch the application
+2. Go to **Tools** page and select `yt-dlp` and `ffmpeg` files (required for YouTube)
+3. Go to **Settings** page and set your default download location
+4. (Optional) Install the Chrome extension from **Browser Extension** page
+5. Paste a URL or drag and drop to start downloading!
 
 ---
 
-## Lisans
+## Browser Extension Setup
 
-Bu proje [MIT Lisansi](LICENSE) altinda yayinlanmaktadir.
+1. Copy the `FluxGet/BrowserExtension` folder
+2. Open `chrome://extensions/` in Chrome
+3. Enable "Developer mode"
+4. Click "Load unpacked"
+5. Select the FluxGet folder
+6. Extension is ready!
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 ```
 MIT License
@@ -156,13 +156,13 @@ in the Software without restriction...
 
 ---
 
-## Katki
+## Contributing
 
-Katkiilariniz bekleniyor! Forklayin, branch olusturun ve PR acin.
+Contributions are welcome! Fork the repo, create a branch, and open a PR.
 
 ---
 
-## Iletisim
+## Contact
 
-- **Sorunlar**: [GitHub Issues](https://github.com/lgcnrb/FluxGet/issues)
-- **Gelistirici**: lgcnrb
+- **Issues**: [GitHub Issues](https://github.com/lgcnrb/FluxGet/issues)
+- **Developer**: lgcnrb

@@ -21,13 +21,13 @@ public class YouTubeFormat
     {
         "MP4" => $"MP4 - {Resolution} ({FormatBytes(FileSize)})",
         "WEBM" => $"WebM - {Resolution} ({FormatBytes(FileSize)})",
-        "MP3" => $"MP3 - Sadece Ses ({FormatBytes(FileSize)})",
+        "MP3" => $"MP3 - Audio Only ({FormatBytes(FileSize)})",
         _ => $"{Extension.ToUpper()} - {Resolution} ({FormatBytes(FileSize)})"
     };
     
     private static string FormatBytes(long bytes) => bytes switch
     {
-        <= 0 => "Bilinmiyor",
+        <= 0 => "Unknown",
         < 1024 => $"{bytes} B",
         < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
         < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
@@ -71,27 +71,27 @@ public class YouTubeService
     
     public async Task<string> EnsureYtDlpAsync(IProgress<double>? progress = null)
     {
-        // SettingsService'den kayitli yolu kontrol et
+        // Check saved path from SettingsService
         var savedPath = _settings.YtDlpPath;
         if (!string.IsNullOrEmpty(savedPath) && File.Exists(savedPath))
             return savedPath;
         
-        // Fallback: tools klasorunde ara
+        // Fallback: search in tools folder
         var fallbackPath = Path.Combine(ToolsDir, "yt-dlp.exe");
         if (File.Exists(fallbackPath) && new FileInfo(fallbackPath).Length > 100_000)
             return fallbackPath;
         
-        throw new Exception("yt-dlp yuklu degil. Ayarlar > Araclar bolumunden yukleyin.");
+        throw new Exception("yt-dlp is not installed. Please install it from Settings > Tools.");
     }
     
     public async Task<string> EnsureFfmpegAsync(IProgress<double>? progress = null)
     {
-        // SettingsService'den kayitli yolu kontrol et
+        // Check saved path from SettingsService
         var savedPath = _settings.FfmpegPath;
         if (!string.IsNullOrEmpty(savedPath) && File.Exists(savedPath))
             return savedPath;
         
-        // Fallback: tools klasorunde ara
+        // Fallback: search in tools folder
         var fallbackPath = Path.Combine(ToolsDir, "ffmpeg.exe");
         if (File.Exists(fallbackPath) && new FileInfo(fallbackPath).Length > 100_000)
             return fallbackPath;
@@ -100,14 +100,14 @@ public class YouTubeService
         if (File.Exists(binPath) && new FileInfo(binPath).Length > 100_000)
             return binPath;
         
-        throw new Exception("ffmpeg yuklu degil. Ayarlar > Araclar bolumunden yukleyin.");
+        throw new Exception("ffmpeg is not installed. Please install it from Settings > Tools.");
     }
     
     public async Task<YouTubeInfo> GetVideoInfoAsync(string url)
     {
         var ytdlpPath = await EnsureYtDlpAsync();
         
-        _logger.LogInformation("yt-dlp video bilgisi aliniyor: {Url}", url);
+        _logger.LogInformation("Fetching yt-dlp video info: {Url}", url);
         
         var psi = new ProcessStartInfo
         {
@@ -121,7 +121,7 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("yt-dlp islemi baslatilamadi.");
+            throw new Exception("Could not start yt-dlp process.");
         
         var outputTask = process.StandardOutput.ReadToEndAsync();
         var errorTask = process.StandardError.ReadToEndAsync();
@@ -133,13 +133,13 @@ public class YouTubeService
         
         if (process.ExitCode != 0)
         {
-            _logger.LogWarning("yt-dlp hata (kod {Code}): {Error}", process.ExitCode, error);
-            throw new Exception($"yt-dlp hatasi: {(string.IsNullOrEmpty(error) ? "Bilinmeyen hata" : error.Trim())}");
+            _logger.LogWarning("yt-dlp error (code {Code}): {Error}", process.ExitCode, error);
+            throw new Exception($"yt-dlp error: {(string.IsNullOrEmpty(error) ? "Unknown error" : error.Trim())}");
         }
         
         if (string.IsNullOrWhiteSpace(output))
         {
-            throw new Exception("yt-dlp bos sonuc dondurdu.");
+            throw new Exception("yt-dlp returned empty result.");
         }
         
         using var doc = JsonDocument.Parse(output);
@@ -176,7 +176,7 @@ public class YouTubeService
                     var acodec = fmt.TryGetProperty("acodec", out var ac) ? ac.GetString() ?? "" : "";
                     var note = fmt.TryGetProperty("format_note", out var fn) ? fn.GetString() ?? "" : "";
                     
-                    // filesize: once dogrudan, sonra filesize_approx, yoksa 0
+                    // filesize: first directly, then filesize_approx, otherwise 0
                     long filesize = 0;
                     if (fmt.TryGetProperty("filesize", out var fs) && fs.ValueKind == JsonValueKind.Number)
                         fs.TryGetInt64(out filesize);
@@ -198,7 +198,7 @@ public class YouTubeService
                 }
                 catch
                 {
-                    // Hatali format kaydini atla
+                    // Skip invalid format record
                 }
             }
         }
@@ -222,7 +222,7 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("yt-dlp islemi baslatilamadi.");
+            throw new Exception("Could not start yt-dlp process.");
             
         var output = await process.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
@@ -230,7 +230,7 @@ public class YouTubeService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Indirme URL'si alinamadi: {error}");
+            throw new Exception($"Could not get download URL: {error}");
         }
         
         return output.Trim();
@@ -255,7 +255,7 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("yt-dlp islemi baslatilamadi.");
+            throw new Exception("Could not start yt-dlp process.");
         
         process.OutputDataReceived += (s, e) =>
         {
@@ -286,7 +286,7 @@ public class YouTubeService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Indirme basarisiz: {error}");
+            throw new Exception($"Download failed: {error}");
         }
     }
     
@@ -295,7 +295,7 @@ public class YouTubeService
     {
         var ytdlpPath = await EnsureYtDlpAsync();
         
-        // ffmpeg var mi kontrol et
+        // Check if ffmpeg is available
         string? ffmpegPath = null;
         try
         {
@@ -309,13 +309,13 @@ public class YouTubeService
         string mergeArg = "";
         if (hasFfmpeg && ffmpegDir != null)
         {
-            // ffmpeg varsa: video+ses birlestirme yapabilir
+            // ffmpeg available: can merge video+audio
             formatSelector = $"bestvideo[height<={height}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={height}]+bestaudio/bestvideo[height<={height}]/best[height<={height}]";
             mergeArg = $"--merge-output-format mp4 --ffmpeg-location {InputSanitizer.EscapeProcessArgument(ffmpegDir)}";
         }
         else
         {
-            // ffmpeg yoksa: SADECE birlesik (video+ses tek dosya) formatlari
+            // ffmpeg not available: ONLY merged formats
             formatSelector = $"best[height<={height}][ext=mp4][acodec!=none]/best[height<={height}][acodec!=none]/best[height<={height}]";
         }
         
@@ -333,7 +333,7 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("yt-dlp islemi baslatilamadi.");
+            throw new Exception("Could not start yt-dlp process.");
         
         process.OutputDataReceived += (s, e) =>
         {
@@ -363,7 +363,7 @@ public class YouTubeService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Video indirme basarisiz: {error}");
+            throw new Exception($"Video download failed: {error}");
         }
     }
     
@@ -386,7 +386,7 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("yt-dlp islemi baslatilamadi.");
+            throw new Exception("Could not start yt-dlp process.");
         
         process.OutputDataReceived += (s, e) =>
         {
@@ -416,7 +416,7 @@ public class YouTubeService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Ses indirme basarisiz: {error}");
+            throw new Exception($"Audio download failed: {error}");
         }
     }
     
@@ -437,14 +437,14 @@ public class YouTubeService
         
         using var process = Process.Start(psi);
         if (process == null)
-            throw new Exception("ffmpeg islemi baslatilamadi.");
+            throw new Exception("Could not start ffmpeg process.");
             
         await process.WaitForExitAsync(cancellationToken);
         
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Donusturme basarisiz: {error}");
+            throw new Exception($"Conversion failed: {error}");
         }
         
         // Delete original file

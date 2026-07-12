@@ -32,26 +32,26 @@ namespace FluxGet.UI.Views
             var downloads = _viewModel.Downloads;
             
             TotalCountText.Text = downloads.Count.ToString();
-            TotalCountSubText.Text = $"{downloads.Count} indirme";
+            TotalCountSubText.Text = $"{downloads.Count} downloads";
             ActiveCountText.Text = downloads.Count(t => t.Status == DownloadStatus.Downloading).ToString();
             CompletedCountText.Text = downloads.Count(t => t.Status == DownloadStatus.Completed).ToString();
             
             var totalSpeed = downloads.Where(t => t.Status == DownloadStatus.Downloading).Sum(t => t.Speed);
             TotalSpeedText.Text = FormatSpeed(totalSpeed);
             
-            // Son indirmeler (en guncel 5)
+            // Recent downloads (latest 5)
             var recent = downloads.Take(5).ToList();
             RecentDownloadsList.ItemsSource = recent;
             EmptyDownloadsPanel.Visibility = recent.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             RecentDownloadsList.Visibility = recent.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             
-            // Aktif indirmeler
+            // Active downloads
             var active = downloads.Where(t => t.Status == DownloadStatus.Downloading).ToList();
             ActiveDownloadsList.ItemsSource = active;
             EmptyActivePanel.Visibility = active.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             ActiveDownloadsList.Visibility = active.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             
-            // Tamamlanan son 5
+            // Last 5 completed
             var completed = downloads.Where(t => t.Status == DownloadStatus.Completed).Take(5).ToList();
             CompletedDownloadsList.ItemsSource = completed;
             EmptyCompletedPanel.Visibility = completed.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -68,9 +68,9 @@ namespace FluxGet.UI.Views
         {
             var dialog = new ContentDialog
             {
-                Title = "Yeni Indirme Ekle",
-                PrimaryButtonText = "Indirmeyi Baslat",
-                CloseButtonText = "Iptal",
+                Title = "Add New Download",
+                PrimaryButtonText = "Start Download",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
                 MaxWidth = 500
@@ -78,16 +78,16 @@ namespace FluxGet.UI.Views
             
             var panel = new StackPanel { Spacing = 12, Margin = new Thickness(0, 16, 0, 0) };
             
-            var urlLabel = new TextBlock { Text = "Indirme Adresi (URL)", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
+            var urlLabel = new TextBlock { Text = "Download URL", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
             var urlBox = new TextBox
             {
-                PlaceholderText = "YouTube veya dosya linki yapistirin",
+                PlaceholderText = "Paste YouTube or file link",
                 Width = 460
             };
             
             var ytHint = new TextBlock
             {
-                Text = "YouTube linkleri otomatik algilanir (MP4/MP3)",
+                Text = "YouTube links auto-detected (MP4/MP3)",
                 FontSize = 11,
                 Foreground = new SolidColorBrush(ColorHelper.FromArgb(255, 30, 144, 255)),
                 Margin = new Thickness(0, 4, 0, 0)
@@ -97,8 +97,8 @@ namespace FluxGet.UI.Views
             panel.Children.Add(urlBox);
             panel.Children.Add(ytHint);
             
-            // Kaydet yolu
-            var pathLabel = new TextBlock { Text = "Kaydet Konumu", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
+            // Save path
+            var pathLabel = new TextBlock { Text = "Save Location", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
             var pathPanel = new Grid();
             pathPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             pathPanel.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(0, GridUnitType.Auto) });
@@ -112,7 +112,7 @@ namespace FluxGet.UI.Views
             };
             var browseButton = new Button
             {
-                Content = "Gozat",
+                Content = "Browse",
                 Margin = new Thickness(8, 0, 0, 0),
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -138,8 +138,8 @@ namespace FluxGet.UI.Views
             panel.Children.Add(pathLabel);
             panel.Children.Add(pathPanel);
             
-            // Kategori secici
-            var catLabel = new TextBlock { Text = "Kategori", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
+            // Category selector
+            var catLabel = new TextBlock { Text = "Category", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
             var catCombo = new ComboBox
             {
                 Width = 200,
@@ -175,9 +175,9 @@ namespace FluxGet.UI.Views
         {
             var ytDialog = new ContentDialog
             {
-                Title = "YouTube Indirme",
-                PrimaryButtonText = "Indir",
-                CloseButtonText = "Iptal",
+                Title = "YouTube Download",
+                PrimaryButtonText = "Download",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
                 MaxWidth = 550
@@ -231,9 +231,9 @@ namespace FluxGet.UI.Views
                 {
                     var errorDialog = new ContentDialog
                     {
-                        Title = "Indirme Hatasi",
+                        Title = "Download Error",
                         Content = ex.Message,
-                        CloseButtonText = "Tamam",
+                        CloseButtonText = "OK",
                         XamlRoot = App.MainWindow.Content.XamlRoot
                     };
                     await errorDialog.ShowAsync();
@@ -277,7 +277,7 @@ namespace FluxGet.UI.Views
             ClipboardUrlText.Text = url;
             ClipboardBanner.Visibility = Visibility.Visible;
             
-            // 10 saniye sonra otomatik kapat
+            // Auto-close after 10 seconds
             _ = Task.Run(async () =>
             {
                 await Task.Delay(10000);

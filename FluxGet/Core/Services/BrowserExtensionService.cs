@@ -95,7 +95,7 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
     {
         try
         {
-            // CORS headers - tarayici eklentisi icin zorunlu
+            // CORS headers - required for browser extension
             context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -107,14 +107,14 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
                 return;
             }
             
-            // POST istekleri icin token dogrulama
+            // Token verification for POST requests
             if (context.Request.HttpMethod == "POST")
             {
                 var authHeader = context.Request.Headers["Authorization"];
                 if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ") || 
                     authHeader.Substring(7).Trim() != _apiToken)
                 {
-                    _logger.LogWarning("Gecersiz API token ile POST istegi reddedildi.");
+                    _logger.LogWarning("POST request rejected with invalid API token.");
                     context.Response.StatusCode = 401;
                     context.Response.ContentType = "application/json";
                     await context.Response.OutputStream.WriteAsync(
@@ -130,14 +130,14 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var request = JsonSerializer.Deserialize<DownloadRequest>(body, options);
                 
-                _logger.LogInformation("Browser indirme istegi alindi: {Url}", request?.Url);
+                _logger.LogInformation("Browser download request received: {Url}", request?.Url);
                 
                 if (request != null && !string.IsNullOrWhiteSpace(request.Url))
                 {
-                    // Blob URL kontrolu - bunlar disaridan indirilemez
+                    // Blob URL check - these cannot be downloaded externally
                     if (request.Url.StartsWith("blob:"))
                     {
-                        _logger.LogWarning("Blob URL alindi, atlanıyor: {Url}", request.Url);
+                        _logger.LogWarning("Blob URL received, skipping: {Url}", request.Url);
                         context.Response.StatusCode = 200;
                         context.Response.ContentType = "application/json";
                         await context.Response.OutputStream.WriteAsync(
@@ -145,10 +145,10 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
                         return;
                     }
                     
-                    // YouTube URL kontrolu
+                    // YouTube URL check
                     if (IsYouTubeUrl(request.Url))
                     {
-                        _logger.LogInformation("YouTube URL algilandi: {Url}", request.Url);
+                        _logger.LogInformation("YouTube URL detected: {Url}", request.Url);
                         YouTubeDownloadRequested?.Invoke(this, new YouTubeDownloadRequest
                         {
                             Url = request.Url,

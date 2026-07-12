@@ -28,17 +28,17 @@
             </NavigationView.HeaderTemplate>
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Giris" Tag="Dashboard">
+                <NavigationViewItem Content="Home" Tag="Dashboard">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE80F;" FontSize="20"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Indirmeler" Tag="Downloads">
+                <NavigationViewItem Content="Downloads" Tag="Downloads">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE896;" FontSize="20"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Kuyruk" Tag="Queue">
+                <NavigationViewItem Content="Queue" Tag="Queue">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8A7;" FontSize="20"/>
                     </NavigationViewItem.Icon>
@@ -51,17 +51,17 @@
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Araclar" Tag="Tools">
+                <NavigationViewItem Content="Tools" Tag="Tools">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE74E;" FontSize="20"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Ayarlar" Tag="Settings">
+                <NavigationViewItem Content="Settings" Tag="Settings">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE713;" FontSize="20"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Hakkinda" Tag="About">
+                <NavigationViewItem Content="About" Tag="About">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE946;" FontSize="20"/>
                     </NavigationViewItem.Icon>

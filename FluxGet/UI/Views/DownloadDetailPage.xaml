@@ -93,14 +93,14 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel>
-                        <TextBlock Text="Durum" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Text="Status" FontWeight="SemiBold" Margin="0,0,0,4"/>
                         <TextBlock 
                             x:Name="StatusText"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="Kategori" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Text="Category" FontWeight="SemiBold" Margin="0,0,0,4"/>
                         <TextBlock 
                             x:Name="CategoryText"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -114,7 +114,7 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12">
                 <StackPanel>
-                    <TextBlock Text="Detaylar" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                    <TextBlock Text="Details" FontWeight="SemiBold" Margin="0,0,0,12"/>
                     
                     <Grid RowSpacing="8">
                         <Grid.ColumnDefinitions>
@@ -122,19 +122,19 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
-                        <TextBlock Text="Dosya Adi" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="File Name" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Grid.Column="1" x:Name="FileNameText" TextWrapping="Wrap"/>
                         
-                        <TextBlock Grid.Row="1" Text="Kaydet Yolu" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="1" Text="Save Path" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" x:Name="FilePathText" TextWrapping="Wrap"/>
                         
-                        <TextBlock Grid.Row="2" Text="Baslangic" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="2" Text="Started" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Grid.Row="2" Grid.Column="1" x:Name="CreatedText"/>
                         
-                        <TextBlock Grid.Row="3" Text="Tamamlanma" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="3" Text="Completed" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Grid.Row="3" Grid.Column="1" x:Name="CompletedText"/>
                         
-                        <TextBlock Grid.Row="4" Text="Tahmini Sure" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Grid.Row="4" Text="Est. Time" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Grid.Row="4" Grid.Column="1" x:Name="EtaText"/>
                     </Grid>
                 </StackPanel>
@@ -148,38 +148,38 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button 
                         x:Name="StartButton"
-                        Content="Baslat"
+                        Content="Start"
                         Style="{StaticResource AccentButtonStyle}"
                         Click="StartButton_Click"
                         Margin="0,0,8,0"/>
                     
                     <Button 
                         x:Name="PauseButton"
-                        Content="Duraklat"
+                        Content="Pause"
                         Click="PauseButton_Click"
                         Margin="0,0,8,0"/>
                     
                     <Button 
                         x:Name="ResumeButton"
-                        Content="Devam Et"
+                        Content="Resume"
                         Click="ResumeButton_Click"
                         Margin="0,0,8,0"/>
                     
                     <Button 
                         x:Name="CancelButton"
-                        Content="Iptal Et"
+                        Content="Cancel"
                         Click="CancelButton_Click"
                         Margin="0,0,8,0"/>
                     
                     <Button 
                         x:Name="OpenFileButton"
-                        Content="Dosyayi Ac"
+                        Content="Open File"
                         Click="OpenFileButton_Click"
                         Margin="0,0,8,0"/>
                     
                     <Button 
                         x:Name="OpenFolderButton"
-                        Content="Klasoru Ac"
+                        Content="Open Folder"
                         Click="OpenFolderButton_Click"/>
                 </StackPanel>
             </Border>

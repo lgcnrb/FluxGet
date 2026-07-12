@@ -41,16 +41,16 @@ async function sendDownloadRequest(url, filename = null, referrer = null, resolu
   if (!isServerRunning) {
     await checkServerHealth();
     if (!isServerRunning) {
-      console.warn('FluxGet sunucusu calismiyor');
-      return { success: false, error: 'FluxGet sunucusu calismiyor' };
+      console.warn('FluxGet server is not running');
+      return { success: false, error: 'FluxGet server is not running' };
     }
   }
   
   if (!apiToken) {
     await fetchApiToken();
     if (!apiToken) {
-      console.warn('API token alinamadi');
-      return { success: false, error: 'API token alinamadi' };
+      console.warn('Could not get API token');
+      return { success: false, error: 'Could not get API token' };
     }
   }
 
@@ -80,16 +80,16 @@ async function sendDownloadRequest(url, filename = null, referrer = null, resolu
 
     const result = await response.json();
     
-    // Token yenileme gerekliyse
+    // Token refresh needed
     if (response.status === 401) {
       apiToken = null;
       await fetchApiToken();
-      return { success: false, error: 'Token yenilendi, tekrar deneyin' };
+      return { success: false, error: 'Token refreshed, please try again' };
     }
     
     return result;
   } catch (error) {
-    console.error('Indirme istegi basarisiz:', error);
+    console.error('Download request failed:', error);
     return { success: false, error: error.message };
   }
 }
@@ -129,31 +129,31 @@ function detectContentType(url) {
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'download-with-fluxget',
-    title: 'FluxGet ile Indir',
+    title: 'Download with FluxGet',
     contexts: ['link', 'image', 'video', 'audio']
   });
 
   chrome.contextMenus.create({
     id: 'download-video-with-fluxget',
-    title: 'Videoyu FluxGet ile Indir',
+    title: 'Download video with FluxGet',
     contexts: ['video']
   });
 
   chrome.contextMenus.create({
     id: 'download-image-with-fluxget',
-    title: 'Gorseli FluxGet ile Indir',
+    title: 'Download image with FluxGet',
     contexts: ['image']
   });
 
   chrome.contextMenus.create({
     id: 'download-page-with-fluxget',
-    title: 'Sayfadaki tum linkleri indir',
+    title: 'Download all links on page',
     contexts: ['page']
   });
 
   chrome.contextMenus.create({
     id: 'download-selected-with-fluxget',
-    title: 'Secileni FluxGet ile Indir',
+    title: 'Download selection with FluxGet',
     contexts: ['selection']
   });
 
@@ -204,7 +204,7 @@ async function downloadAllLinks(tab) {
       }
     }
   } catch (error) {
-    console.error('Sayfadan linkler alinamadi:', error);
+    console.error('Could not get links from page:', error);
   }
 }
 

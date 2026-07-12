@@ -61,7 +61,7 @@ namespace FluxGet
             MainWindow = _window;
             _window.Activate();
             
-            // Uygulama kapaninca sunucuyu durdur
+            // Stop server when app closes
             _window.Closed += OnMainWindowClosed;
             
             // Initialize database - ensure schema matches model
@@ -79,7 +79,7 @@ namespace FluxGet
             }
             else
             {
-                // Schema dogrulugu kontrol et
+                // Check schema validity
                 try
                 {
                     using (var scope = Services.CreateScope())
@@ -120,7 +120,7 @@ namespace FluxGet
             var downloadService = Services.GetRequiredService<IDownloadService>();
             await downloadService.LoadAllAsync();
             
-            // Bildirim servisi - indirme tamamlaninca/hatada bildirim goster
+            // Notification service - show notification on download completed/error
             var notificationService = Services.GetRequiredService<DownloadNotificationService>();
             var downloadSvc = Services.GetRequiredService<IDownloadService>();
             downloadSvc.ProgressChanged.Subscribe(progress =>
@@ -139,7 +139,7 @@ namespace FluxGet
             browserExtension.DownloadRequested += OnBrowserDownloadRequested;
             browserExtension.YouTubeDownloadRequested += OnYouTubeDownloadRequested;
             
-            // Sunucuyu otomatik baslat (her zaman)
+            // Auto-start server (always)
             try
             {
                 await browserExtension.StartAsync();
@@ -171,7 +171,7 @@ namespace FluxGet
                 var queueService = Services.GetRequiredService<IQueueService>();
                 await queueService.EnqueueAsync(task);
                 
-                // UI thread'de guncelle
+                // Update on UI thread
                 var mainVm = Services.GetRequiredService<MainViewModel>();
                 _window?.DispatcherQueue.TryEnqueue(() =>
                 {
@@ -215,7 +215,7 @@ namespace FluxGet
                 var safeName = $"YouTube_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
                 var outputPath = Path.Combine(downloadPath, safeName);
                 
-                // Video bilgisini al - baslik ve boyut
+                // Get video info - title and size
                 YouTubeInfo? info = null;
                 try
                 {
@@ -232,7 +232,7 @@ namespace FluxGet
                 }
                 catch { }
                 
-                // Boyut bilgisi varsa kullan
+                // Use size info if available
                 long fileSize = info?.Formats?.FirstOrDefault()?.FileSize ?? 0;
                 
                 var task = await downloadService.AddDownloadAsync(url, outputPath, Core.Models.DownloadCategory.Video);
@@ -264,7 +264,7 @@ namespace FluxGet
                             }
                             else
                             {
-                                // Boyut bilgisi yoksa yuzdeyi byte'a cevir (tahmini)
+                                // If no size info, convert percentage to bytes (estimated)
                                 task.DownloadedBytes = (long)(pct * 1024 * 1024); // 1MB = %1 varsayalim
                             }
                             task.UpdatedAt = DateTime.UtcNow;
@@ -279,7 +279,7 @@ namespace FluxGet
                             await youTubeService.DownloadVideoByHeightAsync(url, outputPath, resolution, progress: progress);
                         }
                         
-                        // Indirme tamamlandi - dosya boyutunu guncelle
+                        // Download completed - update file size
                         if (File.Exists(outputPath))
                         {
                             var fileInfo = new FileInfo(outputPath);
@@ -329,7 +329,7 @@ namespace FluxGet
         
         private async void OnMainWindowClosed(object sender, WindowEventArgs args)
         {
-            // Uygulama kapaninca sunucuyu durdur
+            // Stop server when app closes
             try
             {
                 var browserExtension = Services.GetRequiredService<IBrowserExtensionService>();

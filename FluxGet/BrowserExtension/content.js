@@ -9,7 +9,7 @@
     const links = [];
     const seen = new Set();
 
-    // YouTube sayfasi mi kontrol et
+    // Check if YouTube page
     if (isYouTubePage()) {
       const pageUrl = window.location.href;
       links.push({
@@ -77,15 +77,15 @@
   }
 
   function getYouTubeTitle() {
-    // YouTube video basligini al
+    // Get YouTube video title
     const titleEl = document.querySelector('h1.ytd-watch-metadata yt-formatted-string, #title h1 yt-formatted-string, h1.title');
     if (titleEl) return titleEl.textContent?.trim();
     
-    // Alternatif: meta tag
+    // Fallback: meta tag
     const metaTitle = document.querySelector('meta[name="title"]');
     if (metaTitle) return metaTitle.getAttribute('content');
     
-    // Alternatif: title tag
+    // Fallback: title tag
     return document.title?.replace(' - YouTube', '').trim();
   }
 
