@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "FluxGet",
   "version": "2.0.0",
-  "description": "FluxGet Indirme Yoneticisi tarayici eklentisi",
+  "description": "FluxGet Download Manager browser extension",
   "permissions": [
     "activeTab",
     "tabs",
@@ -33,27 +33,27 @@
   "context_menus": [
     {
       "id": "download-with-fluxget",
-      "title": "FluxGet ile Indir",
+      "title": "Download with FluxGet",
       "contexts": ["link", "image", "video", "audio"]
     },
     {
       "id": "download-video-with-fluxget",
-      "title": "Videoyu FluxGet ile Indir",
+      "title": "Download video with FluxGet",
       "contexts": ["video"]
     },
     {
       "id": "download-image-with-fluxget",
-      "title": "Gorseli FluxGet ile Indir",
+      "title": "Download image with FluxGet",
       "contexts": ["image"]
     },
     {
       "id": "download-page-with-fluxget",
-      "title": "Sayfadaki tum linkleri indir",
+      "title": "Download all links on page",
       "contexts": ["page"]
     },
     {
       "id": "download-selected-with-fluxget",
-      "title": "Secileni FluxGet ile Indir",
+      "title": "Download selection with FluxGet",
       "contexts": ["selection"]
     }
   ],

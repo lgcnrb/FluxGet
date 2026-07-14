@@ -265,7 +265,7 @@ namespace FluxGet
                             else
                             {
                                 // If no size info, convert percentage to bytes (estimated)
-                                task.DownloadedBytes = (long)(pct * 1024 * 1024); // 1MB = %1 varsayalim
+                                task.DownloadedBytes = (long)(pct * 1024 * 1024); // Assume 1MB = 1%
                             }
                             task.UpdatedAt = DateTime.UtcNow;
                         });

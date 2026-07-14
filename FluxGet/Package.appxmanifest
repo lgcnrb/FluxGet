@@ -19,7 +19,7 @@
     <DisplayName>FluxGet</DisplayName>
     <PublisherDisplayName>selim</PublisherDisplayName>
     <Logo>Assets\FluxGet.png</Logo>
-    <Description>Gelismis indirme yoneticisi. Hizli, guvenilir, akillica. Paralel indirme, YouTube destegi, tarayici eklentisi, kuyruk sistemi ve daha fazlasi.</Description>
+    <Description>Advanced download manager. Fast, reliable, smart. Parallel downloads, YouTube support, browser extension, queue system and more.</Description>
   </Properties>
 
   <Dependencies>
@@ -37,7 +37,7 @@
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="FluxGet"
-        Description="Gelismis indirme yoneticisi. Hizli, guvenilir, akillica."
+        Description="Advanced download manager. Fast, reliable, smart."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\FluxGet.png"
         Square44x44Logo="Assets\FluxGet.png">

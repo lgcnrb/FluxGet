@@ -26,7 +26,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- Genel Ayarlar -->
+            <!-- General Settings -->
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
                     <FontIcon Glyph="&#xE713;" FontSize="16" VerticalAlignment="Center"/>
@@ -144,7 +144,7 @@
                 </Border>
             </StackPanel>
 
-            <!-- Tarayici Eklentisi -->
+            <!-- Browser Extension -->
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
                     <FontIcon Glyph="&#xE774;" FontSize="16" VerticalAlignment="Center"/>
@@ -175,7 +175,7 @@
                 </Border>
             </StackPanel>
 
-            <!-- Aksiyonlar -->
+            <!-- Actions -->
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="10" Padding="16" Margin="0,8,0,0">

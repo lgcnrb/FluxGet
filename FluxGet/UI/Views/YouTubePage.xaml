@@ -33,7 +33,7 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- SOL KOLON: Kontroller -->
+        <!-- LEFT COLUMN: Controls -->
         <StackPanel Grid.Row="1" Grid.Column="0" Spacing="16" VerticalAlignment="Top">
             <StackPanel.ChildrenTransitions>
                 <TransitionCollection>
@@ -41,7 +41,7 @@
                 </TransitionCollection>
             </StackPanel.ChildrenTransitions>
 
-            <!-- URL Giris Card -->
+            <!-- URL Input Card -->
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="20,16">
@@ -57,7 +57,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBox x:Name="UrlBox" PlaceholderText="https://youtube.com/watch?v=... veya youtu.be/..."
+                        <TextBox x:Name="UrlBox" PlaceholderText="https://youtube.com/watch?v=... or youtu.be/..."
                                  VerticalAlignment="Center"
                                  KeyDown="UrlBox_KeyDown"/>
 
@@ -66,14 +66,14 @@
                                 Click="FetchInfoButton_Click" VerticalAlignment="Center"/>
                     </Grid>
 
-                    <!-- Durum -->
+                    <!-- Status -->
                     <StackPanel x:Name="StatusPanel" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
                         <ProgressRing x:Name="StatusRing" Width="16" Height="16"/>
                         <TextBlock x:Name="StatusText" FontSize="12"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
 
-                    <!-- Hata -->
+                    <!-- Error -->
                     <InfoBar x:Name="ErrorInfoBar" Severity="Error" IsOpen="True" IsClosable="True"
                              Visibility="Collapsed" Margin="0,4,0,0">
                         <InfoBar.ActionButton>
@@ -84,7 +84,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Araclar Durumu -->
+            <!-- Tools Status -->
             <InfoBar x:Name="ToolsInfoBar" Severity="Warning" IsOpen="True" IsClosable="False"
                      Title="yt-dlp not installed"
                      Visibility="Collapsed">
@@ -96,7 +96,7 @@
                 </StackPanel>
             </InfoBar>
 
-            <!-- Video Bilgisi + Format Secimi Card -->
+            <!-- Video Info + Format Selection Card -->
             <Border x:Name="VideoInfoBorder" Visibility="Collapsed"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
@@ -127,7 +127,7 @@
 
                     <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}"/>
 
-                    <!-- Format Secimi -->
+                    <!-- Format Selection -->
                     <StackPanel Spacing="10">
                         <TextBlock Text="Download Format" FontSize="14" FontWeight="SemiBold"/>
 
@@ -181,7 +181,7 @@
 
                     <Border Height="1" Background="{ThemeResource CardStrokeColorDefaultBrush}"/>
 
-                    <!-- Kaydet Yolu -->
+                    <!-- Save Path -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="Save Location" FontSize="13" FontWeight="SemiBold"/>
                         <Border Padding="12,8" CornerRadius="8"
@@ -210,7 +210,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Indirme Ilerlemesi -->
+            <!-- Download Progress -->
             <Border x:Name="ProgressBorder" Visibility="Collapsed"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
@@ -239,7 +239,7 @@
             </Border>
         </StackPanel>
 
-        <!-- SAG KOLON: Video Onizleme -->
+        <!-- RIGHT COLUMN: Video Preview -->
         <StackPanel Grid.Row="1" Grid.Column="1" Spacing="16" VerticalAlignment="Top" MinWidth="340" MaxWidth="420">
             <StackPanel.ChildrenTransitions>
                 <TransitionCollection>

@@ -161,10 +161,10 @@ public class DownloadTask : INotifyPropertyChanged
             var elapsed = ElapsedTime;
             if (elapsed == null) return "";
             return elapsed.Value.TotalHours >= 1
-                ? $"{(int)elapsed.Value.TotalHours}sa {elapsed.Value.Minutes}dk"
+                ? $"{(int)elapsed.Value.TotalHours}h {elapsed.Value.Minutes}m"
                 : elapsed.Value.TotalMinutes >= 1
-                    ? $"{(int)elapsed.Value.TotalMinutes}dk {elapsed.Value.Seconds}sn"
-                    : $"{(int)elapsed.Value.TotalSeconds}sn";
+                    ? $"{(int)elapsed.Value.TotalMinutes}m {elapsed.Value.Seconds}s"
+                    : $"{(int)elapsed.Value.TotalSeconds}s";
         }
     }
     
@@ -172,18 +172,18 @@ public class DownloadTask : INotifyPropertyChanged
     
     public double Progress => FileSize > 0 ? (double)DownloadedBytes / FileSize * 100 : 0;
     
-    public string ProgressText => Progress >= 100 ? "%100" : $"%{Progress:F1}";
+    public string ProgressText => Progress >= 100 ? "100%" : $"{Progress:F1}%";
     
     public string StatusText => Status switch
     {
-        DownloadStatus.Pending => "Beklemede",
-        DownloadStatus.Downloading => ActiveChunks > 1 ? $"Indiriliyor ({ActiveChunks} chunk)" : "Indiriliyor",
-        DownloadStatus.Paused => "Duraklatildi",
-        DownloadStatus.Completed => "Tamamlandi",
-        DownloadStatus.Error => $"Hata{(RetryCount > 0 ? $" (Deneme {RetryCount}/{MaxRetries})" : "")}{(ErrorCode != null ? $" - {ErrorCode}" : "")}",
-        DownloadStatus.Cancelled => "Iptal Edildi",
-        DownloadStatus.Queued => $"Kuyrukta ({QueueOrder})",
-        _ => "Bilinmiyor"
+        DownloadStatus.Pending => "Pending",
+        DownloadStatus.Downloading => ActiveChunks > 1 ? $"Downloading ({ActiveChunks} chunks)" : "Downloading",
+        DownloadStatus.Paused => "Paused",
+        DownloadStatus.Completed => "Completed",
+        DownloadStatus.Error => $"Error{(RetryCount > 0 ? $" (Retry {RetryCount}/{MaxRetries})" : "")}{(ErrorCode != null ? $" - {ErrorCode}" : "")}",
+        DownloadStatus.Cancelled => "Cancelled",
+        DownloadStatus.Queued => $"Queued ({QueueOrder})",
+        _ => "Unknown"
     };
     
     public string SpeedText => Speed switch
@@ -211,16 +211,16 @@ public class DownloadTask : INotifyPropertyChanged
             var remaining = FileSize - DownloadedBytes;
             var eta = TimeSpan.FromSeconds(remaining / Speed);
             return eta.TotalHours >= 1
-                ? $"{(int)eta.TotalHours}sa {eta.Minutes}dk"
+                ? $"{(int)eta.TotalHours}h {eta.Minutes}m"
                 : eta.TotalMinutes >= 1
-                    ? $"{(int)eta.TotalMinutes}dk {eta.Seconds}sn"
-                    : $"{(int)eta.TotalSeconds}sn";
+                    ? $"{(int)eta.TotalMinutes}m {eta.Seconds}s"
+                    : $"{(int)eta.TotalSeconds}s";
         }
     }
     
     public string SpeedLimitText => SpeedLimit switch
     {
-        0 => "Sinirsiz",
+        0 => "Unlimited",
         < 1024 => $"{SpeedLimit} B/s",
         < 1024 * 1024 => $"{SpeedLimit / 1024.0:F1} KB/s",
         _ => $"{SpeedLimit / (1024.0 * 1024):F2} MB/s"
@@ -228,14 +228,14 @@ public class DownloadTask : INotifyPropertyChanged
     
     public string PriorityText => Priority switch
     {
-        >= 9 => "Cok Yuksek",
-        >= 7 => "Yuksek",
+        >= 9 => "Very High",
+        >= 7 => "High",
         >= 4 => "Normal",
-        >= 2 => "Dusuk",
-        _ => "Cok Dusuk"
+        >= 2 => "Low",
+        _ => "Very Low"
     };
     
-    public string RetryText => RetryCount > 0 ? $"Yeniden deneniyor ({RetryCount}/{MaxRetries})..." : "";
+    public string RetryText => RetryCount > 0 ? $"Retrying ({RetryCount}/{MaxRetries})..." : "";
     
     public bool IsDownloading => Status == DownloadStatus.Downloading;
     public bool IsPaused => Status == DownloadStatus.Paused;

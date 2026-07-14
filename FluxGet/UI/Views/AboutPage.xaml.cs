@@ -12,10 +12,10 @@ public sealed partial class AboutPage : Page
         InitializeComponent();
         
         var version = Assembly.GetExecutingAssembly().GetName().Version;
-        VersionText.Text = $"Versiyon {version?.Major}.{version?.Minor}.{version?.Build ?? 0}";
+        VersionText.Text = $"Version {version?.Major}.{version?.Minor}.{version?.Build ?? 0}";
         
         PlatformText.Text = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
         RuntimeText.Text = $".NET {Environment.Version.Major}.{Environment.Version.Minor}.{Environment.Version.Build}";
-        WinUIText.Text = "Windows App SDK 1.6";
+        WinUIText.Text = "Windows App SDK 2.2";
     }
 }

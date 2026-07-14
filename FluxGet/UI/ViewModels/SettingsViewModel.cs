@@ -35,7 +35,7 @@ public partial class SettingsViewModel : ObservableObject
     private bool _isBrowserExtensionRunning;
     
     [ObservableProperty]
-    private string _extensionStatus = "Durum: Pasif";
+    private string _extensionStatus = "Status: Inactive";
     
     public SettingsViewModel(
         IQueueService queueService,
@@ -66,8 +66,8 @@ public partial class SettingsViewModel : ObservableObject
         
         _settingsService.Load();
         
-        // Singleton oldugu icin dogrudan atama yapabiliriz
-        // Ancak bu sırada ViewModel olusturulmamis olabilir
+        // Since it's a singleton, we can assign directly
+        // However, the ViewModel might not have been created yet
     }
     
     public void ApplyLoadedSettings()
@@ -124,12 +124,12 @@ public partial class SettingsViewModel : ObservableObject
             if (IsBrowserExtensionRunning)
             {
                 await _browserExtensionService.StopAsync();
-                ExtensionStatus = "Durum: Pasif";
+                ExtensionStatus = "Status: Inactive";
             }
             else
             {
                 await _browserExtensionService.StartAsync();
-                ExtensionStatus = "Durum: Aktif - Baglanti bekleniyor";
+                ExtensionStatus = "Status: Active - Waiting for connection";
             }
             
             IsBrowserExtensionRunning = _browserExtensionService.IsRunning;
@@ -137,7 +137,7 @@ public partial class SettingsViewModel : ObservableObject
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to toggle browser extension");
-            ExtensionStatus = "Durum: Hata - " + ex.Message;
+            ExtensionStatus = "Status: Error - " + ex.Message;
         }
     }
     

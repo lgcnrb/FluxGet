@@ -42,13 +42,13 @@ public partial class NewDownloadViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Url))
         {
-            ErrorMessage = "Lutfen bir URL girin";
+            ErrorMessage = "Please enter a URL";
             return;
         }
         
         if (!Core.Helpers.UrlHelper.IsValidUrl(Url))
         {
-            ErrorMessage = "Gecersiz URL formati";
+            ErrorMessage = "Invalid URL format";
             return;
         }
         
@@ -77,13 +77,13 @@ public partial class NewDownloadViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Url))
         {
-            ErrorMessage = "Lutfen bir URL girin";
+            ErrorMessage = "Please enter a URL";
             return;
         }
         
         if (!Core.Helpers.UrlHelper.IsValidUrl(Url))
         {
-            ErrorMessage = "Gecersiz URL formati";
+            ErrorMessage = "Invalid URL format";
             return;
         }
         
@@ -93,12 +93,12 @@ public partial class NewDownloadViewModel : ObservableObject
         try
         {
             var task = await _downloadService.AddDownloadAsync(Url, SavePath, SelectedCategory);
-            _logger.LogInformation("Indirme baslatildi: {FileName}", task.FileName);
+            _logger.LogInformation("Download started: {FileName}", task.FileName);
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Indirme baslatilamadi: {ex.Message}";
-            _logger.LogError(ex, "Indirme baslatilamadi");
+            ErrorMessage = $"Download failed to start: {ex.Message}";
+            _logger.LogError(ex, "Download failed to start");
         }
         finally
         {

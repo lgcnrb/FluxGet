@@ -110,7 +110,7 @@
                 </Border>
             </StackPanel>
 
-            <!-- Aracl Klasoru -->
+            <!-- Tools Folder -->
             <StackPanel Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,8">
                     <FontIcon Glyph="&#xE8B7;" FontSize="16" VerticalAlignment="Center"/>

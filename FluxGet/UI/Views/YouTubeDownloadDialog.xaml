@@ -19,7 +19,7 @@
         <!-- Video Info -->
         <StackPanel x:Name="VideoInfoPanel" Visibility="Collapsed" Spacing="12">
             
-            <!-- Baslik -->
+            <!-- Title -->
             <TextBlock x:Name="TitleText" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"/>
             
             <Grid>
@@ -33,11 +33,11 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             </Grid>
             
-            <!-- Format Secimi -->
+            <!-- Format Selection -->
             <TextBlock Text="Select Format" FontSize="14" FontWeight="SemiBold" Margin="0,8,0,0"/>
             
             <RadioButtons x:Name="FormatRadioButtons" SelectionChanged="FormatRadioButtons_SelectionChanged">
-                <!-- MP4 secenekleri -->
+                <!-- MP4 options -->
                 <RadioButtons.Header>
                     <StackPanel Orientation="Horizontal" Spacing="4">
                         <FontIcon Glyph="&#xE714;" FontSize="14" VerticalAlignment="Center"/>
@@ -46,7 +46,7 @@
                 </RadioButtons.Header>
             </RadioButtons>
             
-            <!-- Kaydet yolu -->
+            <!-- Save path -->
             <StackPanel Spacing="4" Margin="0,8,0,0">
                 <TextBlock Text="Save Location" FontSize="13" FontWeight="SemiBold"/>
                 <Grid>
@@ -61,7 +61,7 @@
                 </Grid>
             </StackPanel>
             
-            <!-- Hata mesaji -->
+            <!-- Error message -->
             <TextBlock x:Name="ErrorText" Text="" FontSize="12" Foreground="Red" 
                        TextWrapping="Wrap" Visibility="Collapsed"/>
             

@@ -9,7 +9,7 @@ namespace FluxGet.Core.Security;
 public static class InputSanitizer
 {
     /// <summary>
-    /// URL'yi dogrular - yalnizca guvenli scheme'lere izin verir
+    /// Validates URL - only allows safe schemes
     /// </summary>
     public static bool IsValidUrl(string? url)
     {
@@ -19,15 +19,15 @@ public static class InputSanitizer
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
             return false;
 
-        // Yalnizca http ve https scheme'lerine izin ver
+        // Only allow http and https schemes
         if (uri.Scheme != "http" && uri.Scheme != "https")
             return false;
 
-        // Host bos olamaz
+        // Host cannot be empty
         if (string.IsNullOrWhiteSpace(uri.Host))
             return false;
 
-        // Localhost veya ozel IP'leri reddet (SSRF korumasi)
+        // Reject localhost or private IPs (SSRF protection)
         var host = uri.Host.ToLowerInvariant();
         if (host == "localhost" || host == "127.0.0.1" || host == "::1" ||
             host.StartsWith("192.168.") || host.StartsWith("10.") ||
@@ -40,7 +40,7 @@ public static class InputSanitizer
     }
 
     /// <summary>
-    /// YouTube URL'sini dogrular
+    /// Validates YouTube URL
     /// </summary>
     public static bool IsYouTubeUrl(string? url)
     {
@@ -59,31 +59,31 @@ public static class InputSanitizer
     }
 
     /// <summary>
-    /// Dosya yolu icin guvenli karakterleri temizler
+    /// Sanitizes filename for safe file system usage
     /// </summary>
     public static string SanitizeFileName(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
             return "download";
 
-        // Tehlikeli karakterleri temizle
+        // Remove dangerous characters
         foreach (char c in Path.GetInvalidFileNameChars())
         {
             fileName = fileName.Replace(c, '_');
         }
 
-        // Noktalari koru (uzanti icin gerekli)
-        // Birden fazla alt cizgiyi tek yap
+        // Preserve dots (needed for extension)
+        // Replace multiple underscores with single one
         fileName = Regex.Replace(fileName, "_+", "_");
 
-        // Basindaki/sonundaki bosluk ve noktalari temizle
+        // Trim leading/trailing dots and spaces
         fileName = fileName.Trim('.', ' ', '\t');
 
-        // Bos kalirsa default kullan
+        // Use default if empty
         if (string.IsNullOrWhiteSpace(fileName))
             fileName = "download";
 
-        // Uzunluk siniri (Windows MAX_PATH)
+        // Length limit (Windows MAX_PATH)
         if (fileName.Length > 200)
             fileName = fileName.Substring(0, 200);
 
@@ -91,22 +91,22 @@ public static class InputSanitizer
     }
 
     /// <summary>
-    /// Dosya yolunu path traversal saldirilarina karsi korur
+    /// Protects file path against path traversal attacks
     /// </summary>
     public static string SanitizeFilePath(string basePath, string userPath)
     {
         if (string.IsNullOrWhiteSpace(userPath))
             return basePath;
 
-        // Path traversal karakterlerini temizle
+        // Remove path traversal characters
         userPath = userPath.Replace("..", "");
         userPath = userPath.Replace("~", "");
 
-        // Tam yol olustur ve dogrula
+        // Create full path and validate
         var fullPath = Path.Combine(basePath, userPath);
         var resolvedPath = Path.GetFullPath(fullPath);
 
-        // Base path icinde olup olmadigini kontrol et
+        // Check if within base path
         var resolvedBase = Path.GetFullPath(basePath);
         if (!resolvedPath.StartsWith(resolvedBase, StringComparison.OrdinalIgnoreCase))
         {
@@ -117,28 +117,28 @@ public static class InputSanitizer
     }
 
     /// <summary>
-    /// yt-dlp/ffmpeg icin guvenli arguman olusturur
+    /// Creates safe arguments for yt-dlp/ffmpeg
     /// </summary>
     public static string EscapeProcessArgument(string arg)
     {
         if (string.IsNullOrEmpty(arg))
             return "\"\"";
 
-        // Tirnak isareti ile sarmala
+        // Wrap in quotes
         var escaped = arg.Replace("\"", "\\\"");
 
         return $"\"{escaped}\"";
     }
 
     /// <summary>
-    /// URL'yi indirme icin dogrular ve temizler
+    /// Validates and cleans URL for download
     /// </summary>
     public static (string url, string? filename) ValidateDownloadInput(string url, string? filename)
     {
         if (!IsValidUrl(url))
-            throw new ArgumentException("Gecersiz URL: yalnizca http/https URL'lerine izin verilir.");
+            throw new ArgumentException("Invalid URL: only http/https URLs are allowed.");
 
-        // URL'den dosya adini cikar
+        // Extract filename from URL
         if (string.IsNullOrWhiteSpace(filename) && Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
             var path = uri.AbsolutePath;
@@ -159,7 +159,7 @@ public static class InputSanitizer
 }
 
 /// <summary>
-/// HTTP istekleri icin guvenlik header'lari
+/// Security headers for HTTP requests
 /// </summary>
 public static class SecurityHeaders
 {
@@ -167,13 +167,13 @@ public static class SecurityHeaders
     
     public static void AddSecurityHeaders(System.Net.HttpListenerResponse response)
     {
-        // CORS - yalnizca kendi origin'imize izin ver
+        // CORS - only allow our own origin
         response.Headers.Add("Access-Control-Allow-Origin", CorsOrigin);
         response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
         response.Headers.Add("Access-Control-Allow-Credentials", "true");
         
-        // Guvenlik header'lari
+        // Security headers
         response.Headers.Add("X-Content-Type-Options", "nosniff");
         response.Headers.Add("X-Frame-Options", "DENY");
         response.Headers.Add("X-XSS-Protection", "1; mode=block");
@@ -181,7 +181,7 @@ public static class SecurityHeaders
 }
 
 /// <summary>
-/// Basit API token dogrulama
+/// Simple API token validation
 /// </summary>
 public static class ApiTokenValidator
 {
@@ -189,7 +189,7 @@ public static class ApiTokenValidator
     private static readonly object _lock = new();
     
     /// <summary>
-    /// Yeni bir token olustur
+    /// Generate a new token
     /// </summary>
     public static string GenerateToken()
     {
@@ -202,7 +202,7 @@ public static class ApiTokenValidator
     }
     
     /// <summary>
-    /// Token'i dogrula
+    /// Validate token
     /// </summary>
     public static bool ValidateToken(string? token)
     {
@@ -224,7 +224,7 @@ public static class ApiTokenValidator
     }
     
     /// <summary>
-    /// Süresi dolmus token'lari temizle
+    /// Clean up expired tokens
     /// </summary>
     public static void CleanupExpiredTokens()
     {

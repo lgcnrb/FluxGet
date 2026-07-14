@@ -20,7 +20,7 @@ public class DownloadNotificationService
                 <toast>
                     <visual>
                         <binding template="ToastGeneric">
-                            <text>Indirme Tamamlandi</text>
+                            <text>Download Completed</text>
                             <text>{EscapeXml(task.FileName)}</text>
                             <text>{FormatBytes(task.FileSize)} - {EscapeXml(task.FilePath)}</text>
                         </binding>
@@ -36,7 +36,7 @@ public class DownloadNotificationService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Bildirim gosterilemedi: {FileName}", task.FileName);
+            _logger.LogWarning(ex, "Could not show notification: {FileName}", task.FileName);
         }
     }
     
@@ -48,9 +48,9 @@ public class DownloadNotificationService
                 <toast>
                     <visual>
                         <binding template="ToastGeneric">
-                            <text>Indirme Hatasi</text>
+                            <text>Download Error</text>
                             <text>{EscapeXml(task.FileName)}</text>
-                            <text>{EscapeXml(task.ErrorCode ?? "Bilinmeyen hata")}</text>
+                            <text>{EscapeXml(task.ErrorCode ?? "Unknown error")}</text>
                         </binding>
                     </visual>
                 </toast>
@@ -64,7 +64,7 @@ public class DownloadNotificationService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Bildirim gosterilemedi: {FileName}", task.FileName);
+            _logger.LogWarning(ex, "Could not show notification: {FileName}", task.FileName);
         }
     }
     

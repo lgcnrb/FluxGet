@@ -98,7 +98,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="SQLite" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="EF Core 9.0 (SQLite)" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="EF Core 8.0 (SQLite)" VerticalAlignment="Center"/>
                         </Grid>
 
                         <Grid Height="24">
@@ -107,7 +107,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="MVVM" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="CommunityToolkit.Mvvm 8.4" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="CommunityToolkit.Mvvm 8.2" VerticalAlignment="Center"/>
                         </Grid>
 
                         <Grid Height="24">

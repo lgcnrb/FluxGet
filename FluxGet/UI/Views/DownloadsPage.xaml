@@ -49,7 +49,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Durum Filtreleri -->
+            <!-- Status Filters -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
                 <Button Content="All" Tag="All" Click="FilterButton_Click" Padding="16,8"/>
                 <Button Content="Active" Tag="Active" Click="FilterButton_Click" Padding="16,8"/>
@@ -63,7 +63,7 @@
                                 TextChanged="SearchBox_TextChanged"/>
             </StackPanel>
 
-            <!-- Kategori Filtreleri -->
+            <!-- Category Filters -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
                 <Button Content="All Categories" Tag="CatAll" Click="CategoryFilter_Click" Padding="14,6"/>
                 <Button Content="Video" Tag="Video" Click="CategoryFilter_Click" Padding="14,6"/>
@@ -101,7 +101,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Kategori Ikonu -->
+                            <!-- Category Icon -->
                             <Border Grid.Column="0" Width="44" Height="44" CornerRadius="10"
                                     Background="{ThemeResource LayerFillColorDefaultBrush}"
                                     VerticalAlignment="Center">
@@ -109,7 +109,7 @@
                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
 
-                            <!-- Dosya Bilgileri -->
+                            <!-- File Information -->
                             <Grid Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -118,7 +118,7 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <!-- Dosya Adi -->
+                                <!-- File Name -->
                                 <TextBlock Grid.Row="0" Text="{Binding FileName}" FontSize="14"
                                            FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxLines="1"/>
 
@@ -140,7 +140,7 @@
                                                FontSize="12" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                 </Grid>
 
-                                <!-- Durum Bilgileri -->
+                                <!-- Status Information -->
                                 <Grid Grid.Row="3" Margin="0,4,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
@@ -169,35 +169,35 @@
                                 </Grid>
                             </Grid>
 
-                            <!-- Aksiyon Butonlari -->
+                            <!-- Action Buttons -->
                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
                                         Spacing="4">
-                                <!-- Duraklat/Devam -->
+                                <!-- Pause/Resume -->
                                 <Button Click="PauseResumeButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="Pause/Resume"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE769;" FontSize="14"/>
                                 </Button>
-                                <!-- Dosyayi Ac -->
+                                <!-- Open File -->
                                 <Button Click="OpenFileButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="Open File"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE8A7;" FontSize="14"/>
                                 </Button>
-                                <!-- Klasoru Ac -->
+                                <!-- Open Folder -->
                                 <Button Click="OpenFolderButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="Open Folder"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE838;" FontSize="14"/>
                                 </Button>
-                                <!-- Iptal -->
+                                <!-- Cancel -->
                                 <Button Click="CancelButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="Cancel"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE711;" FontSize="14"/>
                                 </Button>
-                                <!-- Kaldir -->
+                                <!-- Remove -->
                                 <Button Click="RemoveButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="Remove"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE74D;" FontSize="14"/>
                                 </Button>
-                                <!-- DigerSecenekler -->
+                                <!-- More Options -->
                                 <Button x:Name="MoreOptionsButton" Click="MoreOptionsButton_Click" Padding="8">
                                     <ToolTipService.ToolTip><ToolTip Content="More Options"/></ToolTipService.ToolTip>
                                     <FontIcon Glyph="&#xE712;" FontSize="14"/>

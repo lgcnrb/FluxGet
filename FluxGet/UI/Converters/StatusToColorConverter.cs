@@ -14,13 +14,13 @@ public class StatusToColorConverter : IValueConverter
         {
             return status switch
             {
-                "Tamamlandi" => new SolidColorBrush(ColorHelper.FromArgb(255, 76, 199, 100)),
-                "Indiriliyor" => new SolidColorBrush(ColorHelper.FromArgb(255, 96, 205, 255)),
-                "Duraklatildi" => new SolidColorBrush(ColorHelper.FromArgb(255, 255, 179, 71)),
-                "Hata" => new SolidColorBrush(ColorHelper.FromArgb(255, 255, 100, 100)),
-                "Beklemede" => new SolidColorBrush(ColorHelper.FromArgb(255, 180, 180, 180)),
-                "Kuyrukta" => new SolidColorBrush(ColorHelper.FromArgb(255, 160, 160, 220)),
-                "Iptal" => new SolidColorBrush(ColorHelper.FromArgb(255, 140, 140, 140)),
+                "Completed" => new SolidColorBrush(ColorHelper.FromArgb(255, 76, 199, 100)),
+                "Downloading" => new SolidColorBrush(ColorHelper.FromArgb(255, 96, 205, 255)),
+                "Paused" => new SolidColorBrush(ColorHelper.FromArgb(255, 255, 179, 71)),
+                "Error" => new SolidColorBrush(ColorHelper.FromArgb(255, 255, 100, 100)),
+                "Pending" => new SolidColorBrush(ColorHelper.FromArgb(255, 180, 180, 180)),
+                "Queued" => new SolidColorBrush(ColorHelper.FromArgb(255, 160, 160, 220)),
+                "Cancelled" => new SolidColorBrush(ColorHelper.FromArgb(255, 140, 140, 140)),
                 _ => new SolidColorBrush(ColorHelper.FromArgb(255, 140, 140, 140))
             };
         }

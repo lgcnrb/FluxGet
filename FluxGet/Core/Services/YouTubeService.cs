@@ -339,7 +339,7 @@ public class YouTubeService
         {
             if (e.Data != null && progress != null)
             {
-                if (e.Data.Contains("% of") || e.Data.Contains("% of"))
+                if (e.Data.Contains("% of"))
                 {
                     var idx = e.Data.LastIndexOf('[');
                     var end = e.Data.IndexOf('%');

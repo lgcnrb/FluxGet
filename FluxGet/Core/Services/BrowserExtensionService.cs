@@ -96,7 +96,7 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
         try
         {
             // CORS headers - required for browser extension
-            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            context.Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:19874");
             context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
             
@@ -235,7 +235,7 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
             try
             {
                 await context.Response.OutputStream.WriteAsync(
-                    System.Text.Encoding.UTF8.GetBytes($"{{\"error\":\"{ex.Message}\"}}"));
+                    System.Text.Encoding.UTF8.GetBytes("{\"error\":\"Internal server error\"}"));
             }
             catch { }
         }

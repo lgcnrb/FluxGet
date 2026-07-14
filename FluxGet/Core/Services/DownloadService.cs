@@ -879,7 +879,7 @@ public partial class DownloadService : IDownloadService, IDisposable
             if (string.IsNullOrEmpty(fileName))
                 fileName = "download";
             
-            // Protocol redirect kontrolu
+            // Protocol redirect check
             var finalUrl = response.RequestMessage?.RequestUri?.ToString() ?? url;
             if (finalUrl != url)
             {

@@ -52,7 +52,7 @@ public partial class MainViewModel : ObservableObject
         _queueService = queueService;
         _logger = logger;
         
-        // ProgressChanged'i dinle
+        // Listen to ProgressChanged
         _downloadService.ProgressChanged.Subscribe(OnProgressChanged);
     }
     
@@ -70,7 +70,7 @@ public partial class MainViewModel : ObservableObject
     }
     
     /// <summary>
-    /// Indirmeleri DownloadService'den yukle (sayfa yuklenirken cagrilir)
+    /// Load downloads from DownloadService (called when page loads)
     /// </summary>
     [RelayCommand]
     private async Task LoadDownloadsAsync()
@@ -97,7 +97,7 @@ public partial class MainViewModel : ObservableObject
     }
     
     /// <summary>
-    /// Yeni indirme ekle: URL → HEAD istegi → dosya bilgisi → kuyruga ekle
+    /// Add new download: URL → HEAD request → file info → add to queue
     /// </summary>
     [RelayCommand]
     private async Task AddDownloadAsync(string url)
@@ -121,7 +121,7 @@ public partial class MainViewModel : ObservableObject
     }
     
     /// <summary>
-    /// Yeni indirme ekle: URL + kaydet yolu + kategori
+    /// Add new download: URL + save path + category
     /// </summary>
     public async Task AddDownloadWithOptionsAsync(string url, string? savePath, DownloadCategory category)
     {
@@ -240,7 +240,7 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            // Duraklatilmis indirmeleri kuyruga ekle
+            // Add paused downloads to queue
             var paused = Downloads.Where(t => t.Status == DownloadStatus.Paused || t.Status == DownloadStatus.Pending).ToList();
             foreach (var task in paused)
             {
@@ -280,7 +280,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
     
-    /// <summary>Indirme bazli hiz limiti ayarla</summary>
+    /// <summary>Set per-download speed limit</summary>
     [RelayCommand]
     private void SetSpeedLimit(object? parameters)
     {
@@ -292,7 +292,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
     
-    /// <summary>Chunk sayisini dinamik olarak degistir</summary>
+    /// <summary>Dynamically change chunk count</summary>
     [RelayCommand]
     private void AdjustChunks(object? parameters)
     {
@@ -302,7 +302,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
     
-    /// <summary>Dosyayi ac</summary>
+    /// <summary>Open file</summary>
     [RelayCommand]
     private async Task OpenFileAsync(DownloadTask task)
     {
@@ -319,7 +319,7 @@ public partial class MainViewModel : ObservableObject
         }
     }
     
-    /// <summary>Klasoru ac</summary>
+    /// <summary>Open folder</summary>
     [RelayCommand]
     private async Task OpenFolderAsync(DownloadTask task)
     {

@@ -14,18 +14,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <NoWarn>$(NoWarn);CsWinRT1028;CsWinRT1030</NoWarn>
 
-    <!-- Paket Bilgileri -->
+    <!-- Package Information -->
     <Version>2.0.0</Version>
     <Authors>lgcnrb</Authors>
     <Company>FluxGet</Company>
     <Product>FluxGet</Product>
-    <Description>Gelismis indirme yoneticisi. Hizli, guvenilir, akillica. Paralel indirme, YouTube destegi, tarayici eklentisi, kuyruk sistemi ve daha fazlasi.</Description>
+    <Description>Advanced download manager. Fast, reliable, smart. Parallel downloads, YouTube support, browser extension, queue system and more.</Description>
     <Copyright>Copyright (c) 2026 FluxGet</Copyright>
     <PackageProjectUrl>https://github.com/lgcnrb/FluxGet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lgcnrb/FluxGet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>download-manager;youtube;video-downloader;parallel-download;winui;dotnet</PackageTags>
-    <PackageReleaseNotes>v2.0: YouTube video/MP3 indirme, ffmpeg entegrasyonu, cozunurluk secimi, otomatik video+ses birlestirme</PackageReleaseNotes>
+    <PackageReleaseNotes>v2.0: YouTube video/MP3 download, ffmpeg integration, resolution selection, automatic video+audio merging</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>FluxGet.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>

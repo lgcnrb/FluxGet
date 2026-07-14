@@ -41,7 +41,7 @@
                 </Button>
             </Grid>
 
-            <!-- Clipboard Banner (gizli varsayilan) -->
+            <!-- Clipboard Banner (hidden by default) -->
             <Border x:Name="ClipboardBanner" Visibility="Collapsed" CornerRadius="10"
                     Padding="16,12" Margin="0,0,0,4"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
