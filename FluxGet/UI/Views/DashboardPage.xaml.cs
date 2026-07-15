@@ -83,7 +83,7 @@ namespace FluxGet.UI.Views
             var urlBox = new TextBox
             {
                 PlaceholderText = "Paste YouTube or file link",
-                Width = 460
+                HorizontalAlignment = HorizontalAlignment.Stretch
             };
             
             var ytHint = new TextBlock
@@ -143,7 +143,6 @@ namespace FluxGet.UI.Views
             var catLabel = new TextBlock { Text = "Category", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold, Margin = new Thickness(0, 8, 0, 0) };
             var catCombo = new ComboBox
             {
-                Width = 200,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 ItemsSource = Enum.GetValues(typeof(DownloadCategory)),
                 SelectedIndex = 0
