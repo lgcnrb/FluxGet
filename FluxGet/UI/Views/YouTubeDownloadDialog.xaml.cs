@@ -1,3 +1,4 @@
+using FluxGet.Core.Helpers;
 using FluxGet.Core.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -87,7 +88,7 @@ public sealed partial class YouTubeDownloadDialog : Page
                 
                 var rb = new RadioButton
                 {
-                    Content = $"MP3 - Audio Only ({FormatBytes(mp3Format.FileSize)})",
+                    Content = $"MP3 - Audio Only ({FileHelper.FormatBytes(mp3Format.FileSize)})",
                     Tag = mp3Format,
                     Margin = new Thickness(0, 4, 0, 4)
                 };
@@ -133,13 +134,4 @@ public sealed partial class YouTubeDownloadDialog : Page
             PathText.Text = _savePath;
         }
     }
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        <= 0 => "Unknown",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
-    };
 }

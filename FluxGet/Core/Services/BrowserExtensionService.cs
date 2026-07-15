@@ -185,10 +185,23 @@ public class BrowserExtensionService : IBrowserExtensionService, IDisposable
             }
             else if (context.Request.Url?.AbsolutePath == "/api/token" && context.Request.HttpMethod == "GET")
             {
-                context.Response.StatusCode = 200;
-                context.Response.ContentType = "application/json";
-                await context.Response.OutputStream.WriteAsync(
-                    System.Text.Encoding.UTF8.GetBytes($"{{\"token\":\"{_apiToken}\"}}"));
+                var remoteAddress = context.Request.RemoteEndPoint?.Address?.ToString() ?? "";
+                var isLocalhost = remoteAddress == "127.0.0.1" || remoteAddress == "::1" || remoteAddress == "::ffff:127.0.0.1";
+                
+                if (!isLocalhost)
+                {
+                    context.Response.StatusCode = 403;
+                    context.Response.ContentType = "application/json";
+                    await context.Response.OutputStream.WriteAsync(
+                        System.Text.Encoding.UTF8.GetBytes("{\"error\":\"Forbidden\"}"));
+                }
+                else
+                {
+                    context.Response.StatusCode = 200;
+                    context.Response.ContentType = "application/json";
+                    await context.Response.OutputStream.WriteAsync(
+                        System.Text.Encoding.UTF8.GetBytes($"{{\"token\":\"{_apiToken}\"}}"));
+                }
             }
             else if (context.Request.Url?.AbsolutePath == "/api/downloads" && context.Request.HttpMethod == "GET")
             {

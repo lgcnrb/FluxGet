@@ -400,8 +400,19 @@ public partial class DownloadService : IDownloadService, IDisposable
         {
             task.RetryCount = 0;
             task.ErrorCode = null;
-            _ = Task.Run(async () => await StartDownloadAsync(task));
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await StartDownloadAsync(task);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error resuming download: {FileName}", task.FileName);
+                }
+            });
         }
+        await Task.CompletedTask;
     }
     
     public async Task CancelDownloadAsync(DownloadTask task)
@@ -460,7 +471,17 @@ public partial class DownloadService : IDownloadService, IDisposable
         var paused = _allDownloads.Values.Where(t => t.Status == DownloadStatus.Paused).ToList();
         foreach (var task in paused)
         {
-            _ = Task.Run(async () => await StartDownloadAsync(task));
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await StartDownloadAsync(task);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error resuming download: {FileName}", task.FileName);
+                }
+            });
             await Task.Delay(200);
         }
     }
@@ -490,7 +511,17 @@ public partial class DownloadService : IDownloadService, IDisposable
         if (_allDownloads.TryGetValue(taskId, out var task))
         {
             task.SpeedLimit = bytesPerSecond;
-            _ = SaveAsync(task);
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await SaveAsync(task);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to save speed limit for {FileName}", task.FileName);
+                }
+            });
         }
     }
     
@@ -903,8 +934,9 @@ public partial class DownloadService : IDownloadService, IDisposable
                 }
                 return ("download", 0, false, "");
             }
-            catch
+            catch (Exception innerEx)
             {
+                System.Diagnostics.Debug.WriteLine($"Failed to get file info: {innerEx.Message}");
                 return ("download", 0, false, "");
             }
         }
@@ -969,18 +1001,16 @@ public partial class DownloadService : IDownloadService, IDisposable
     
     private void RecordSpeedHistory(DownloadTask task)
     {
-        if (!_speedHistory.ContainsKey(task.Id))
-            _speedHistory[task.Id] = [];
-        
-        var history = _speedHistory[task.Id];
-        history.Add(task.Speed);
-        
-        if (history.Count > 60)
+        var history = _speedHistory.GetOrAdd(task.Id, _ => new List<double>());
+        lock (history)
         {
-            history.RemoveAt(0);
+            history.Add(task.Speed);
+            if (history.Count > 60)
+            {
+                history.RemoveAt(0);
+            }
+            task.SpeedHistory = [.. history];
         }
-        
-        task.SpeedHistory = [.. history];
     }
     
     private void EmitProgress(DownloadTask task)

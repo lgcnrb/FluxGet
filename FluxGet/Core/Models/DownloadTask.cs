@@ -25,9 +25,9 @@ public class DownloadTask : INotifyPropertyChanged
                 handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        catch
+        catch (Exception ex)
         {
-            handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            System.Diagnostics.Debug.WriteLine($"PropertyChanged dispatch failed for {propertyName}: {ex.Message}");
         }
     }
     

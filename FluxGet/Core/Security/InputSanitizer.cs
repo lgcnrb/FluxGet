@@ -59,38 +59,6 @@ public static class InputSanitizer
     }
 
     /// <summary>
-    /// Sanitizes filename for safe file system usage
-    /// </summary>
-    public static string SanitizeFileName(string fileName)
-    {
-        if (string.IsNullOrWhiteSpace(fileName))
-            return "download";
-
-        // Remove dangerous characters
-        foreach (char c in Path.GetInvalidFileNameChars())
-        {
-            fileName = fileName.Replace(c, '_');
-        }
-
-        // Preserve dots (needed for extension)
-        // Replace multiple underscores with single one
-        fileName = Regex.Replace(fileName, "_+", "_");
-
-        // Trim leading/trailing dots and spaces
-        fileName = fileName.Trim('.', ' ', '\t');
-
-        // Use default if empty
-        if (string.IsNullOrWhiteSpace(fileName))
-            fileName = "download";
-
-        // Length limit (Windows MAX_PATH)
-        if (fileName.Length > 200)
-            fileName = fileName.Substring(0, 200);
-
-        return fileName;
-    }
-
-    /// <summary>
     /// Protects file path against path traversal attacks
     /// </summary>
     public static string SanitizeFilePath(string basePath, string userPath)
@@ -138,7 +106,6 @@ public static class InputSanitizer
         if (!IsValidUrl(url))
             throw new ArgumentException("Invalid URL: only http/https URLs are allowed.");
 
-        // Extract filename from URL
         if (string.IsNullOrWhiteSpace(filename) && Uri.TryCreate(url, UriKind.Absolute, out var uri))
         {
             var path = uri.AbsolutePath;
@@ -146,12 +113,12 @@ public static class InputSanitizer
             if (lastSlash >= 0 && lastSlash < path.Length - 1)
             {
                 filename = Uri.UnescapeDataString(path.Substring(lastSlash + 1));
-                filename = SanitizeFileName(filename);
+                filename = FluxGet.Core.Helpers.FileHelper.SanitizeFileName(filename);
             }
         }
         else if (!string.IsNullOrWhiteSpace(filename))
         {
-            filename = SanitizeFileName(filename);
+            filename = FluxGet.Core.Helpers.FileHelper.SanitizeFileName(filename);
         }
 
         return (url, filename);

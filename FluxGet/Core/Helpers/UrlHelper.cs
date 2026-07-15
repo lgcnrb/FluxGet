@@ -18,8 +18,9 @@ public static class UrlHelper
             
             return Uri.UnescapeDataString(fileName);
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"Failed to extract filename from URL: {ex.Message}");
             return "download";
         }
     }
@@ -31,8 +32,9 @@ public static class UrlHelper
             var uri = new Uri(url);
             return uri.Host;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"Failed to extract domain from URL: {ex.Message}");
             return string.Empty;
         }
     }

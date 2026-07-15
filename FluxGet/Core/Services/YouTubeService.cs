@@ -187,9 +187,9 @@ public class YouTubeService
                         Note = note
                     });
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Skip invalid format record
+                    System.Diagnostics.Debug.WriteLine($"Skipping invalid format record: {ex.Message}");
                 }
             }
         }

@@ -27,8 +27,9 @@ public sealed partial class ToolsPage : Page
             var fi = new FileInfo(exePath);
             return fi.Length > 100_000;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"Failed to validate tool: {ex.Message}");
             return false;
         }
     }
@@ -53,8 +54,9 @@ public sealed partial class ToolsPage : Page
             process.WaitForExit(5000);
             return string.IsNullOrEmpty(output) ? null : output;
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"Failed to get tool version: {ex.Message}");
             return null;
         }
     }
