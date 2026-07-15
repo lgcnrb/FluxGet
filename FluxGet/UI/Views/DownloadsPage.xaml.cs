@@ -55,10 +55,11 @@ namespace FluxGet.UI.Views
                 CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
-                MaxWidth = 500
+                MaxWidth = 500,
+                HorizontalAlignment = HorizontalAlignment.Center
             };
             
-            var panel = new StackPanel { Spacing = 12, Margin = new Thickness(0, 16, 0, 0) };
+            var panel = new StackPanel { Spacing = 12, Margin = new Thickness(0, 16, 0, 0), HorizontalAlignment = HorizontalAlignment.Stretch };
             
             var urlLabel = new TextBlock { Text = "Download URL", FontSize = 13, FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
             var urlBox = new TextBox
@@ -161,7 +162,8 @@ namespace FluxGet.UI.Views
                 CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = App.MainWindow.Content.XamlRoot,
-                MaxWidth = 550
+                MaxWidth = 550,
+                HorizontalAlignment = HorizontalAlignment.Center
             };
             
             var ytPage = new YouTubeDownloadDialog(savePath);
@@ -211,7 +213,8 @@ namespace FluxGet.UI.Views
                         Title = "Download Error",
                         Content = ex.Message,
                         CloseButtonText = "OK",
-                        XamlRoot = App.MainWindow.Content.XamlRoot
+                        XamlRoot = App.MainWindow.Content.XamlRoot,
+                        HorizontalAlignment = HorizontalAlignment.Center
                     };
                     await errorDialog.ShowAsync();
                 }

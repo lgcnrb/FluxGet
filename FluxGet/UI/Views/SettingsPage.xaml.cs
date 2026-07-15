@@ -99,7 +99,8 @@ public sealed partial class SettingsPage : Page
                 Title = title,
                 Content = message,
                 CloseButtonText = "OK",
-                XamlRoot = App.MainWindow.Content.XamlRoot
+                XamlRoot = App.MainWindow.Content.XamlRoot,
+                HorizontalAlignment = HorizontalAlignment.Center
             }.ShowAsync();
         }
         catch
