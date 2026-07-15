@@ -57,27 +57,35 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBox x:Name="UrlBox" PlaceholderText="https://youtube.com/watch?v=... or youtu.be/..."
+                        <TextBox x:Name="UrlBox" PlaceholderText="https://youtube.com/watch?v=..."
+                                 Text="{x:Bind VM.Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  VerticalAlignment="Center"
                                  KeyDown="UrlBox_KeyDown"/>
 
-                        <Button Grid.Column="1" x:Name="FetchInfoButton" Content="Fetch Info"
+                        <Button Grid.Column="1" Content="Fetch Info"
                                 Style="{StaticResource AccentButtonStyle}" Padding="20,8"
-                                Click="FetchInfoButton_Click" VerticalAlignment="Center"/>
+                                Command="{x:Bind VM.FetchInfoCommand}"
+                                IsEnabled="{x:Bind VM.IsFetching, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                                VerticalAlignment="Center"/>
                     </Grid>
 
                     <!-- Status -->
-                    <StackPanel x:Name="StatusPanel" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
-                        <ProgressRing x:Name="StatusRing" Width="16" Height="16"/>
-                        <TextBlock x:Name="StatusText" FontSize="12"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8"
+                                Visibility="{x:Bind VM.IsFetching, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ProgressRing Width="16" Height="16"
+                                      IsActive="{x:Bind VM.IsFetching, Mode=OneWay}"/>
+                        <TextBlock FontSize="12"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="Fetching video info..."/>
                     </StackPanel>
 
                     <!-- Error -->
-                    <InfoBar x:Name="ErrorInfoBar" Severity="Error" IsOpen="True" IsClosable="True"
-                             Visibility="Collapsed" Margin="0,4,0,0">
+                    <InfoBar Severity="Error" IsOpen="{x:Bind VM.HasError, Mode=TwoWay}" IsClosable="True"
+                             Title="{x:Bind VM.ErrorMessage, Mode=OneWay}"
+                             Visibility="{x:Bind VM.HasError, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                             Margin="0,4,0,0">
                         <InfoBar.ActionButton>
-                            <Button x:Name="RetryDownloadButton" Content="Retry" Click="RetryDownloadButton_Click"
+                            <Button Content="Retry" Command="{x:Bind VM.FetchInfoCommand}"
                                     Style="{StaticResource AccentButtonStyle}" Padding="12,4" FontSize="12"/>
                         </InfoBar.ActionButton>
                     </InfoBar>
@@ -85,24 +93,24 @@
             </Border>
 
             <!-- Tools Status -->
-            <InfoBar x:Name="ToolsInfoBar" Severity="Warning" IsOpen="True" IsClosable="False"
+            <InfoBar Severity="Warning" IsOpen="True" IsClosable="False"
                      Title="yt-dlp not installed"
-                     Visibility="Collapsed">
+                     Visibility="{x:Bind VM.ShowToolsWarning, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <TextBlock Text="yt-dlp is required for YouTube downloads." VerticalAlignment="Center"
                                FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    <Button x:Name="GoToSettingsButton" Content="Go to Settings" Click="GoToSettingsButton_Click"
+                    <Button Content="Go to Settings" Click="GoToSettingsButton_Click"
                             Style="{StaticResource AccentButtonStyle}" Padding="16,4" FontSize="12"/>
                 </StackPanel>
             </InfoBar>
 
             <!-- Video Info + Format Selection Card -->
-            <Border x:Name="VideoInfoBorder" Visibility="Collapsed"
+            <Border Visibility="{x:Bind VM.VideoInfo, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="20,16">
                 <StackPanel Spacing="12">
-                    <TextBlock x:Name="VideoTitleText" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                    <TextBlock Text="{x:Bind VM.VideoTitle, Mode=OneWay}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"/>
 
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Border Padding="8,4" CornerRadius="6"
@@ -110,7 +118,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE77B;" FontSize="12" VerticalAlignment="Center"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock x:Name="VideoUploaderText" FontSize="12"
+                                <TextBlock Text="{x:Bind VM.VideoUploader, Mode=OneWay}" FontSize="12"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
@@ -119,7 +127,7 @@
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE767;" FontSize="12" VerticalAlignment="Center"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock x:Name="VideoDurationText" FontSize="12"
+                                <TextBlock Text="{x:Bind VM.VideoDuration, Mode=OneWay}" FontSize="12"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Border>
@@ -149,7 +157,7 @@
                                     <TextBlock Text="MP4" FontSize="18" FontWeight="Bold"/>
                                     <TextBlock Text="Video + Audio" FontSize="12"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock x:Name="Mp4SizeText" FontSize="11"
+                                    <TextBlock Text="{x:Bind VM.Mp4SizeText, Mode=OneWay}" FontSize="11"
                                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                                 </StackPanel>
                             </Border>
@@ -166,16 +174,19 @@
                                     <TextBlock Text="MP3" FontSize="18" FontWeight="Bold"/>
                                     <TextBlock Text="Audio Only" FontSize="12"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock x:Name="Mp3SizeText" FontSize="11"
+                                    <TextBlock Text="{x:Bind VM.Mp3SizeText, Mode=OneWay}" FontSize="11"
                                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
 
-                        <StackPanel x:Name="ResolutionPanel" Visibility="Collapsed" Spacing="6" Margin="0,4,0,0">
+                        <StackPanel Visibility="{x:Bind VM.IsMp4Mode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    Spacing="6" Margin="0,4,0,0">
                             <TextBlock Text="Resolution" FontSize="13" FontWeight="SemiBold"/>
                             <ComboBox x:Name="ResolutionComboBox" MinWidth="300" HorizontalAlignment="Left"
-                                      SelectionChanged="ResolutionComboBox_SelectionChanged"/>
+                                      ItemsSource="{x:Bind VM.Resolutions}"
+                                      SelectedIndex="{x:Bind VM.SelectedResolutionIndex, Mode=TwoWay}"
+                                      DisplayMemberPath="DisplayText"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -194,7 +205,7 @@
                                 </Grid.ColumnDefinitions>
                                 <FontIcon Glyph="&#xE8B8;" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock x:Name="SavePathText" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
+                                <TextBlock Text="{x:Bind VM.SavePath, Mode=OneWay}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                                            FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                            VerticalAlignment="Center" Grid.Column="1"/>
                                 <Button Grid.Column="2" Content="Change" Click="ChangePathButton_Click" Margin="12,0,0,0"
@@ -203,15 +214,17 @@
                         </Border>
                     </StackPanel>
 
-                    <Button x:Name="DownloadButton" Content="Start Download"
+                    <Button Content="Start Download"
                             Style="{StaticResource AccentButtonStyle}" Padding="24,12"
                             HorizontalAlignment="Stretch" FontSize="14"
-                            Click="DownloadButton_Click" Visibility="Collapsed"/>
+                            Command="{x:Bind VM.DownloadCommand}"
+                            IsEnabled="{x:Bind VM.IsDownloading, Mode=OneWay, Converter={StaticResource InvertBoolConverter}}"
+                            Visibility="{x:Bind VM.VideoInfo, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"/>
                 </StackPanel>
             </Border>
 
             <!-- Download Progress -->
-            <Border x:Name="ProgressBorder" Visibility="Collapsed"
+            <Border Visibility="{x:Bind VM.IsDownloading, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="20,16">
@@ -221,8 +234,9 @@
                         <TextBlock Text="Download Status" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <ProgressBar x:Name="DownloadProgressBar" Maximum="100" Height="8" CornerRadius="4"
-                                 Foreground="#60cdff"/>
+                    <ProgressBar Maximum="100" Height="8" CornerRadius="4"
+                                 Foreground="#60cdff"
+                                 Value="{x:Bind VM.DownloadProgress, Mode=OneWay}"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -230,9 +244,11 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="DownloadPercentText" Text="%0" FontSize="16" FontWeight="Bold"
+                        <TextBlock Text="{x:Bind VM.DownloadProgressText, Mode=OneWay}"
+                                   FontSize="16" FontWeight="Bold"
                                    Foreground="#60cdff" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="2" x:Name="DownloadStatusText" FontSize="12"
+                        <TextBlock Grid.Column="2" Text="{x:Bind VM.DownloadStatusText, Mode=OneWay}"
+                                   FontSize="12"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"/>
                     </Grid>
                 </StackPanel>
@@ -247,27 +263,28 @@
                 </TransitionCollection>
             </StackPanel.ChildrenTransitions>
 
-            <Border x:Name="VideoPreviewBorder" Visibility="Collapsed"
+            <Border Visibility="{x:Bind VM.VideoInfo, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1"
                     CornerRadius="12" Padding="12">
                 <StackPanel Spacing="12">
                     <Border CornerRadius="8" MaxHeight="240">
-                        <Image x:Name="ThumbnailImage" Stretch="UniformToFill" MaxHeight="240"/>
+                        <Image Stretch="UniformToFill" MaxHeight="240"
+                               Source="{x:Bind VM.VideoThumbnailUrl, Mode=OneWay}"/>
                     </Border>
 
                     <StackPanel Spacing="8">
-                        <TextBlock x:Name="PreviewTitleText" FontSize="14" FontWeight="SemiBold"
+                        <TextBlock Text="{x:Bind VM.VideoTitle, Mode=OneWay}" FontSize="14" FontWeight="SemiBold"
                                    TextWrapping="Wrap" MaxLines="3"/>
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE77B;" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock x:Name="PreviewUploaderText" FontSize="11"
+                                <TextBlock Text="{x:Bind VM.VideoUploader, Mode=OneWay}" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Spacing="4">
                                 <FontIcon Glyph="&#xE767;" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock x:Name="PreviewDurationText" FontSize="11"
+                                <TextBlock Text="{x:Bind VM.VideoDuration, Mode=OneWay}" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
                         </StackPanel>
@@ -279,13 +296,13 @@
                         <TextBlock Text="Selected Download" FontSize="12" FontWeight="SemiBold"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <StackPanel Orientation="Horizontal" Spacing="6">
-                            <Border x:Name="SelectedFormatBadge" Padding="8,4" CornerRadius="6"
+                            <Border Padding="8,4" CornerRadius="6"
                                     Background="{ThemeResource LayerFillColorDefaultBrush}">
-                                <TextBlock x:Name="SelectedFormatText" FontSize="11" FontWeight="SemiBold"/>
+                                <TextBlock Text="{x:Bind VM.SelectedFormatText, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"/>
                             </Border>
-                            <Border x:Name="SelectedSizeBadge" Padding="8,4" CornerRadius="6"
+                            <Border Padding="8,4" CornerRadius="6"
                                     Background="{ThemeResource LayerFillColorDefaultBrush}">
-                                <TextBlock x:Name="SelectedSizeText" FontSize="11"
+                                <TextBlock Text="{x:Bind VM.SelectedSizeText, Mode=OneWay}" FontSize="11"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </Border>
                         </StackPanel>

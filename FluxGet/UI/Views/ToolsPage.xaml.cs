@@ -1,134 +1,39 @@
-using FluxGet.Core.Services;
+using FluxGet.Core.Helpers;
+using FluxGet.UI.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics;
-using Windows.Storage.Pickers;
 using Windows.System;
 
 namespace FluxGet.UI.Views;
 
 public sealed partial class ToolsPage : Page
 {
-    private readonly SettingsService _settingsService;
+    private readonly ToolsViewModel _vm;
     
     public ToolsPage()
     {
         InitializeComponent();
-        _settingsService = App.GetService<SettingsService>();
+        _vm = App.GetService<ToolsViewModel>();
+        DataContext = _vm;
         
-        Loaded += async (s, e) => await RefreshToolsStatusAsync();
+        Loaded += async (s, e) => await RefreshAsync();
     }
     
-    private static bool IsToolValid(string exePath)
+    private async Task RefreshAsync()
     {
-        if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath)) return false;
-        try
-        {
-            var fi = new FileInfo(exePath);
-            return fi.Length > 100_000;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to validate tool: {ex.Message}");
-            return false;
-        }
-    }
-    
-    private string? GetToolVersion(string exePath)
-    {
-        if (!File.Exists(exePath)) return null;
-        try
-        {
-            var psi = new ProcessStartInfo
-            {
-                FileName = exePath,
-                Arguments = "--version",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            using var process = Process.Start(psi);
-            if (process == null) return null;
-            var output = process.StandardOutput.ReadToEnd().Trim();
-            process.WaitForExit(5000);
-            return string.IsNullOrEmpty(output) ? null : output;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Failed to get tool version: {ex.Message}");
-            return null;
-        }
-    }
-    
-    private async Task RefreshToolsStatusAsync()
-    {
-        // yt-dlp status
-        var ytdlpPath = _settingsService.YtDlpPath;
-        if (IsToolValid(ytdlpPath))
-        {
-            YtDlpStatusText.Text = "Installed";
-            YtDlpStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen);
-            YtDlpPathText.Text = ytdlpPath;
-            
-            var version = GetToolVersion(ytdlpPath);
-            if (version != null)
-            {
-                YtDlpVersionText.Text = $"Version: {version}";
-                YtDlpVersionText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                YtDlpVersionText.Visibility = Visibility.Collapsed;
-            }
-        }
-        else
-        {
-            YtDlpStatusText.Text = "Not installed";
-            YtDlpStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange);
-            YtDlpPathText.Text = "Select the file using the button below";
-            YtDlpVersionText.Visibility = Visibility.Collapsed;
-        }
+        await _vm.RefreshToolsStatusAsync();
         
-        // ffmpeg status
-        var ffmpegPath = _settingsService.FfmpegPath;
-        if (IsToolValid(ffmpegPath))
-        {
-            FfmpegStatusText.Text = "Installed";
-            FfmpegStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGreen);
-            FfmpegPathText.Text = ffmpegPath;
-            
-            var version = GetToolVersion(ffmpegPath);
-            if (version != null)
-            {
-                FfmpegVersionText.Text = $"Version: {version}";
-                FfmpegVersionText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                FfmpegVersionText.Visibility = Visibility.Collapsed;
-            }
-        }
-        else
-        {
-            FfmpegStatusText.Text = "Not installed";
-            FfmpegStatusText.Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Orange);
-            FfmpegPathText.Text = "Select the file using the button below (required for MP3)";
-            FfmpegVersionText.Visibility = Visibility.Collapsed;
-        }
-    }
-    
-    private async Task<string?> PickExeFile(string commitText)
-    {
-        var picker = new FileOpenPicker();
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-        picker.FileTypeFilter.Add(".exe");
-        picker.CommitButtonText = commitText;
-        picker.SuggestedStartLocation = PickerLocationId.Downloads;
+        YtDlpStatusText.Text = _vm.YtDlpStatusText;
+        YtDlpStatusText.Foreground = _vm.YtDlpStatusBrush;
+        YtDlpPathText.Text = _vm.YtDlpPathText;
+        YtDlpVersionText.Text = _vm.YtDlpVersionText;
+        YtDlpVersionText.Visibility = _vm.YtDlpVersionVisible ? Visibility.Visible : Visibility.Collapsed;
         
-        var file = await picker.PickSingleFileAsync();
-        return file?.Path;
+        FfmpegStatusText.Text = _vm.FfmpegStatusText;
+        FfmpegStatusText.Foreground = _vm.FfmpegStatusBrush;
+        FfmpegPathText.Text = _vm.FfmpegPathText;
+        FfmpegVersionText.Text = _vm.FfmpegVersionText;
+        FfmpegVersionText.Visibility = _vm.FfmpegVersionVisible ? Visibility.Visible : Visibility.Collapsed;
     }
     
     private async void YtDlpSelectButton_Click(object sender, RoutedEventArgs e)
@@ -136,25 +41,19 @@ public sealed partial class ToolsPage : Page
         var filePath = await PickExeFile("Select yt-dlp.exe");
         if (filePath == null) return;
         
-        if (!File.Exists(filePath))
+        if (!System.IO.File.Exists(filePath))
         {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
+            await DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
             return;
         }
         
-        _settingsService.YtDlpPath = filePath;
-        _settingsService.Save();
+        _vm.SetYtDlpPath(filePath);
+        await RefreshAsync();
         
-        await RefreshToolsStatusAsync();
-        
-        if (IsToolValid(filePath))
-        {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Success", $"yt-dlp path saved:\n{filePath}");
-        }
+        if (_vm.IsToolValid(filePath))
+            await DialogHelper.ShowInfoAsync("Success", $"yt-dlp path saved:\n{filePath}");
         else
-        {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
-        }
+            await DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
     }
     
     private async void FfmpegSelectButton_Click(object sender, RoutedEventArgs e)
@@ -162,35 +61,29 @@ public sealed partial class ToolsPage : Page
         var filePath = await PickExeFile("Select ffmpeg.exe (from bin folder)");
         if (filePath == null) return;
         
-        if (!File.Exists(filePath))
+        if (!System.IO.File.Exists(filePath))
         {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
+            await DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
             return;
         }
         
-        _settingsService.FfmpegPath = filePath;
-        _settingsService.Save();
+        _vm.SetFfmpegPath(filePath);
+        await RefreshAsync();
         
-        await RefreshToolsStatusAsync();
-        
-        if (IsToolValid(filePath))
-        {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Success", $"ffmpeg path saved:\n{filePath}");
-        }
+        if (_vm.IsToolValid(filePath))
+            await DialogHelper.ShowInfoAsync("Success", $"ffmpeg path saved:\n{filePath}");
         else
-        {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
-        }
+            await DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
     }
     
     private async void YtDlpDownloadButton_Click(object sender, RoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"));
+        await Launcher.LaunchUriAsync(new System.Uri("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"));
     }
     
     private async void FfmpegDownloadButton_Click(object sender, RoutedEventArgs e)
     {
-        await Launcher.LaunchUriAsync(new Uri("https://github.com/BtbN/FFmpeg-Builds/releases"));
+        await Launcher.LaunchUriAsync(new System.Uri("https://github.com/BtbN/FFmpeg-Builds/releases"));
     }
     
     private async void YtDlpCheckUpdateButton_Click(object sender, RoutedEventArgs e)
@@ -201,47 +94,27 @@ public sealed partial class ToolsPage : Page
         
         try
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "powershell.exe",
-                Arguments = "-NoProfile -Command \"$resp = Invoke-RestMethod 'https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest'; $resp.tag_name\"",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            using var process = Process.Start(psi)!;
-            var latestVersion = (await process.StandardOutput.ReadToEndAsync()).Trim();
-            await process.WaitForExitAsync();
-            
-            var ytdlpPath = _settingsService.YtDlpPath;
-            var currentVersion = GetToolVersion(ytdlpPath);
+            var latestVersion = await _vm.CheckYtDlpUpdateAsync();
+            var currentVersion = _vm.GetToolVersion(_vm.YtDlpPathText);
             
             if (string.IsNullOrEmpty(latestVersion))
-            {
-                await Core.Helpers.DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
-            }
+                await DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("yt-dlp ", "").Replace("v", "")))
-            {
-                await Core.Helpers.DialogHelper.ShowInfoAsync("Up to date", $"yt-dlp is already up to date: {currentVersion}");
-            }
+                await DialogHelper.ShowInfoAsync("Up to date", $"yt-dlp is already up to date: {currentVersion}");
             else
             {
-                var result = await Core.Helpers.DialogHelper.ShowConfirmAsync(
+                var result = await DialogHelper.ShowConfirmAsync(
                     "New Version Available",
                     $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
-                    "Download",
-                    "Cancel",
-                    400);
+                    "Download", "Cancel", 400);
                 
                 if (result == ContentDialogResult.Primary)
-                {
-                    await Launcher.LaunchUriAsync(new Uri("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"));
-                }
+                    await Launcher.LaunchUriAsync(new System.Uri("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"));
             }
         }
         catch (Exception ex)
         {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
+            await DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
         }
         finally
         {
@@ -258,47 +131,27 @@ public sealed partial class ToolsPage : Page
         
         try
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "powershell.exe",
-                Arguments = "-NoProfile -Command \"$resp = Invoke-RestMethod 'https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest'; $resp.tag_name\"",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            using var process = Process.Start(psi)!;
-            var latestVersion = (await process.StandardOutput.ReadToEndAsync()).Trim();
-            await process.WaitForExitAsync();
-            
-            var ffmpegPath = _settingsService.FfmpegPath;
-            var currentVersion = GetToolVersion(ffmpegPath);
+            var latestVersion = await _vm.CheckFfmpegUpdateAsync();
+            var currentVersion = _vm.GetToolVersion(_vm.FfmpegPathText);
             
             if (string.IsNullOrEmpty(latestVersion))
-            {
-                await Core.Helpers.DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
-            }
+                await DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("n", "")))
-            {
-                await Core.Helpers.DialogHelper.ShowInfoAsync("Up to date", $"ffmpeg is already up to date: {currentVersion}");
-            }
+                await DialogHelper.ShowInfoAsync("Up to date", $"ffmpeg is already up to date: {currentVersion}");
             else
             {
-                var result = await Core.Helpers.DialogHelper.ShowConfirmAsync(
+                var result = await DialogHelper.ShowConfirmAsync(
                     "New Version Available",
                     $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
-                    "Download",
-                    "Cancel",
-                    400);
+                    "Download", "Cancel", 400);
                 
                 if (result == ContentDialogResult.Primary)
-                {
-                    await Launcher.LaunchUriAsync(new Uri("https://github.com/BtbN/FFmpeg-Builds/releases"));
-                }
+                    await Launcher.LaunchUriAsync(new System.Uri("https://github.com/BtbN/FFmpeg-Builds/releases"));
             }
         }
         catch (Exception ex)
         {
-            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
+            await DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
         }
         finally
         {
@@ -309,16 +162,19 @@ public sealed partial class ToolsPage : Page
     
     private void OpenToolsFolderButton_Click(object sender, RoutedEventArgs e)
     {
-        var toolsDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "FluxGet", "tools");
-        Directory.CreateDirectory(toolsDir);
+        _vm.OpenToolsFolder();
+    }
+    
+    private static async Task<string?> PickExeFile(string commitText)
+    {
+        var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        picker.FileTypeFilter.Add(".exe");
+        picker.CommitButtonText = commitText;
+        picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
         
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "explorer.exe",
-            Arguments = toolsDir,
-            UseShellExecute = true
-        });
+        var file = await picker.PickSingleFileAsync();
+        return file?.Path;
     }
 }

@@ -23,6 +23,18 @@ public partial class YouTubeViewModel : ObservableObject
     private YouTubeInfo? _videoInfo;
 
     [ObservableProperty]
+    private string _videoTitle = string.Empty;
+
+    [ObservableProperty]
+    private string _videoUploader = string.Empty;
+
+    [ObservableProperty]
+    private string _videoDuration = string.Empty;
+
+    [ObservableProperty]
+    private string _videoThumbnailUrl = string.Empty;
+
+    [ObservableProperty]
     private string _savePath;
 
     [ObservableProperty]
@@ -45,6 +57,13 @@ public partial class YouTubeViewModel : ObservableObject
 
     [ObservableProperty]
     private string _downloadStatusText = string.Empty;
+
+    partial void OnDownloadProgressChanged(double value)
+    {
+        OnPropertyChanged(nameof(DownloadProgressText));
+    }
+    
+    public string DownloadProgressText => $"%{DownloadProgress:F1}";
 
     [ObservableProperty]
     private int _selectedResolutionIndex = -1;
@@ -130,6 +149,10 @@ public partial class YouTubeViewModel : ObservableObject
         try
         {
             VideoInfo = await _youTubeService.GetVideoInfoAsync(Url);
+            VideoTitle = VideoInfo.Title;
+            VideoUploader = VideoInfo.Uploader;
+            VideoDuration = VideoInfo.Duration;
+            VideoThumbnailUrl = VideoInfo.ThumbnailUrl;
             Resolutions.Clear();
             SelectedResolutionIndex = -1;
 
