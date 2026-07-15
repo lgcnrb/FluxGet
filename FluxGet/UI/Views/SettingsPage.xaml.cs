@@ -100,7 +100,7 @@ public sealed partial class SettingsPage : Page
                 Content = message,
                 CloseButtonText = "OK",
                 XamlRoot = App.MainWindow.Content.XamlRoot,
-                HorizontalAlignment = HorizontalAlignment.Center
+                Width = 400
             }.ShowAsync();
         }
         catch

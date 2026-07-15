@@ -230,7 +230,8 @@ public sealed partial class ToolsPage : Page
                     Content = $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
                     PrimaryButtonText = "Download",
                     CloseButtonText = "Cancel",
-                    XamlRoot = App.MainWindow.Content.XamlRoot
+                    XamlRoot = App.MainWindow.Content.XamlRoot,
+                    Width = 400
                 }.ShowAsync();
                 
                 if (result == ContentDialogResult.Primary)
@@ -290,7 +291,7 @@ public sealed partial class ToolsPage : Page
                     PrimaryButtonText = "Download",
                     CloseButtonText = "Cancel",
                     XamlRoot = App.MainWindow.Content.XamlRoot,
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    Width = 400
                 }.ShowAsync();
                 
                 if (result == ContentDialogResult.Primary)
@@ -320,7 +321,7 @@ public sealed partial class ToolsPage : Page
                 Content = message,
                 CloseButtonText = "OK",
                 XamlRoot = App.MainWindow.Content.XamlRoot,
-                HorizontalAlignment = HorizontalAlignment.Center
+                Width = 400
             }.ShowAsync();
         }
         catch
