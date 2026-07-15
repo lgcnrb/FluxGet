@@ -189,9 +189,9 @@ public partial class DownloadDetailViewModel : ObservableObject
     
     private void UpdateFormattedValues()
     {
-        FormattedFileSize = Core.Helpers.FileHelper.FormatFileSize(FileSize);
-        FormattedDownloadedBytes = Core.Helpers.FileHelper.FormatFileSize(DownloadedBytes);
-        FormattedSpeed = $"{Core.Helpers.FileHelper.FormatFileSize((long)Speed)}/s";
+        FormattedFileSize = Core.Helpers.FileHelper.FormatBytes(FileSize);
+        FormattedDownloadedBytes = Core.Helpers.FileHelper.FormatBytes(DownloadedBytes);
+        FormattedSpeed = $"{Core.Helpers.FileHelper.FormatBytes((long)Speed)}/s";
         
         if (Speed > 0 && FileSize > DownloadedBytes)
         {

@@ -1,3 +1,4 @@
+using FluxGet.Core.Helpers;
 using FluxGet.Core.Models;
 using FluxGet.Core.Services;
 using FluxGet.UI.ViewModels;
@@ -37,7 +38,7 @@ namespace FluxGet.UI.Views
             CompletedCountText.Text = downloads.Count(t => t.Status == DownloadStatus.Completed).ToString();
             
             var totalSpeed = downloads.Where(t => t.Status == DownloadStatus.Downloading).Sum(t => t.Speed);
-            TotalSpeedText.Text = FormatSpeed(totalSpeed);
+            TotalSpeedText.Text = FileHelper.FormatSpeed(totalSpeed);
             
             // Recent downloads (latest 5)
             var recent = downloads.Take(5).ToList();
@@ -185,7 +186,6 @@ namespace FluxGet.UI.Views
             var ytPage = new YouTubeDownloadDialog(savePath);
             ytDialog.Content = ytPage;
             
-            // Load video info
             await ytPage.LoadVideoInfoAsync(url);
             
             var dialogResult = await ytDialog.ShowAsync();
@@ -195,7 +195,7 @@ namespace FluxGet.UI.Views
                 var downloadService = App.GetService<IDownloadService>();
                 
                 var format = ytPage.SelectedFormat;
-                var outputPath = Path.Combine(ytPage.SavePath, SanitizeFileName(ytPage.VideoInfo?.Title ?? "youtube_video"));
+                var outputPath = Path.Combine(ytPage.SavePath, FileHelper.SanitizeFileName(ytPage.VideoInfo?.Title ?? "youtube_video"));
                 
                 try
                 {
@@ -228,26 +228,9 @@ namespace FluxGet.UI.Views
                 }
                 catch (Exception ex)
                 {
-                    var errorDialog = new ContentDialog
-                    {
-                        Title = "Download Error",
-                        Content = ex.Message,
-                        CloseButtonText = "OK",
-                        XamlRoot = App.MainWindow.Content.XamlRoot,
-                        Width = 400
-                    };
-                    await errorDialog.ShowAsync();
+                    await DialogHelper.ShowErrorAsync("Download Error", ex.Message);
                 }
             }
-        }
-        
-        private static string SanitizeFileName(string name)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                name = name.Replace(c, '_');
-            }
-            return name.Length > 100 ? name[..100] : name;
         }
         
         private async void PauseAllButton_Click(object sender, RoutedEventArgs e)
@@ -301,15 +284,6 @@ namespace FluxGet.UI.Views
         private void ClipboardDismissButton_Click(object sender, RoutedEventArgs e)
         {
             ClipboardBanner.Visibility = Visibility.Collapsed;
-        }
-        
-        private static string FormatSpeed(double bytesPerSecond)
-        {
-            if (bytesPerSecond >= 1024 * 1024)
-                return $"{bytesPerSecond / (1024 * 1024):F2} MB/s";
-            if (bytesPerSecond >= 1024)
-                return $"{bytesPerSecond / 1024:F2} KB/s";
-            return $"{bytesPerSecond:F0} B/s";
         }
     }
 }

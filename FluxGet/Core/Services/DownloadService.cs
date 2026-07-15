@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography;
 using FluxGet.Core.Data;
+using FluxGet.Core.Helpers;
 using FluxGet.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -263,7 +264,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         await SaveAsync(task);
         
         _logger.LogInformation("Download prepared: {FileName} ({FileSize}, {ChunkCount} chunks, Protocol={Protocol})",
-            fileName, FormatBytes(fileSize), task.ChunkCount, protocol);
+            fileName, FileHelper.FormatBytes(fileSize), task.ChunkCount, protocol);
         
         return task;
     }
@@ -514,13 +515,13 @@ public partial class DownloadService : IDownloadService, IDisposable
         var hasChunkProgress = task.Chunks.Any(c => c.DownloadedBytes > 0 && c.Status != ChunkStatus.Completed);
         
         _logger.LogInformation("StartDownloadInternal: SupportsResume={Supports}, ChunkCount={Chunks}, FileSize={Size}, HasProgress={HasProgress}",
-            task.SupportsResume, task.ChunkCount, FormatBytes(task.FileSize), hasChunkProgress);
+            task.SupportsResume, task.ChunkCount, FileHelper.FormatBytes(task.FileSize), hasChunkProgress);
         
         if (task.SupportsResume && task.ChunkCount > 1 && task.FileSize > 0)
         {
             if (!hasChunkProgress)
             {
-                _logger.LogInformation("Starting chunk download: {ChunkCount} chunks, {FileSize}", task.ChunkCount, FormatBytes(task.FileSize));
+                _logger.LogInformation("Starting chunk download: {ChunkCount} chunks, {FileSize}", task.ChunkCount, FileHelper.FormatBytes(task.FileSize));
                 await CreateChunksAsync(task);
             }
             else
@@ -532,7 +533,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         }
         else
         {
-            _logger.LogInformation("Single connection download (Range={Supports}, Size={Size})", task.SupportsResume, FormatBytes(task.FileSize));
+            _logger.LogInformation("Single connection download (Range={Supports}, Size={Size})", task.SupportsResume, FileHelper.FormatBytes(task.FileSize));
             await DownloadSingleAsync(task, httpClient, cancellationToken);
         }
         
@@ -736,8 +737,8 @@ public partial class DownloadService : IDownloadService, IDisposable
                 }
                 
                 _logger.LogDebug("Chunk {Index}: {Read}/{Total} bytes ({Speed}), Task: {TaskDownloaded}/{TaskSize}",
-                    chunk.ChunkIndex, chunkTotalRead, chunk.EndByte - chunk.StartByte + 1, FormatBytes((long)task.Speed),
-                    FormatBytes(task.DownloadedBytes), FormatBytes(task.FileSize));
+                    chunk.ChunkIndex, chunkTotalRead, chunk.EndByte - chunk.StartByte + 1, FileHelper.FormatBytes((long)task.Speed),
+                    FileHelper.FormatBytes(task.DownloadedBytes), FileHelper.FormatBytes(task.FileSize));
                 
                 EmitProgress(task);
             }
@@ -1004,7 +1005,7 @@ public partial class DownloadService : IDownloadService, IDisposable
         if (!Directory.Exists(path))
         {
             try { Directory.CreateDirectory(path); }
-            catch { }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Failed to create download directory: {ex.Message}"); }
         }
         return path;
     }
@@ -1035,15 +1036,6 @@ public partial class DownloadService : IDownloadService, IDisposable
         var hash = SHA256.HashData(bytes);
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        0 => "0 B",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
-    };
     
     #endregion
     

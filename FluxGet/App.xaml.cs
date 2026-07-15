@@ -8,9 +8,10 @@ using Microsoft.UI.Xaml;
 
 namespace FluxGet
 {
-    public partial class App : Application
+    public partial class App : Application, IAsyncDisposable
     {
         private Window? _window;
+        private ServiceProvider? _serviceProvider;
         
         public static IServiceProvider Services { get; private set; } = null!;
         public static Window MainWindow { get; private set; } = null!;
@@ -51,8 +52,12 @@ namespace FluxGet
             services.AddTransient<DownloadDetailViewModel>();
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<QueueViewModel>();
+            services.AddSingleton<YouTubeViewModel>();
+            services.AddSingleton<DashboardViewModel>();
+            services.AddSingleton<ToolsViewModel>();
             
-            Services = services.BuildServiceProvider();
+            _serviceProvider = (ServiceProvider)services.BuildServiceProvider();
+            Services = _serviceProvider;
         }
         
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
@@ -89,17 +94,18 @@ namespace FluxGet
                         await dbContext.DownloadTasks.Select(d => d.Cookies).FirstOrDefaultAsync();
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"DB schema check failed, will recreate: {ex.Message}");
                     needsRecreate = true;
                 }
             }
             
             if (needsRecreate)
             {
-                try { if (File.Exists(dbPath)) File.Delete(dbPath); } catch { }
-                try { if (File.Exists(shmPath)) File.Delete(shmPath); } catch { }
-                try { if (File.Exists(walPath)) File.Delete(walPath); } catch { }
+                TryDeleteFile(dbPath);
+                TryDeleteFile(shmPath);
+                TryDeleteFile(walPath);
                 
                 using (var scope = Services.CreateScope())
                 {
@@ -158,7 +164,19 @@ namespace FluxGet
             if (string.IsNullOrWhiteSpace(e.Url))
                 return;
             
-            _ = HandleBrowserDownloadAsync(e.Url);
+            _ = HandleBrowserDownloadAsyncSafe(e.Url);
+        }
+        
+        private async Task HandleBrowserDownloadAsyncSafe(string url)
+        {
+            try
+            {
+                await HandleBrowserDownloadAsync(url);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unhandled error in browser download: {ex.Message}");
+            }
         }
         
         private async Task HandleBrowserDownloadAsync(string url)
@@ -195,7 +213,19 @@ namespace FluxGet
             if (string.IsNullOrWhiteSpace(e.Url))
                 return;
             
-            _ = HandleYouTubeDownloadAsync(e.Url, e.Resolution, e.Format);
+            _ = HandleYouTubeDownloadAsyncSafe(e.Url, e.Resolution, e.Format);
+        }
+        
+        private async Task HandleYouTubeDownloadAsyncSafe(string url, int resolution, string format)
+        {
+            try
+            {
+                await HandleYouTubeDownloadAsync(url, resolution, format);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Unhandled error in YouTube download: {ex.Message}");
+            }
         }
         
         private async Task HandleYouTubeDownloadAsync(string url, int resolution = 720, string format = "mp4")
@@ -230,7 +260,10 @@ namespace FluxGet
                         outputPath = Path.Combine(downloadPath, safeName);
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to fetch YouTube video info: {ex.Message}");
+                }
                 
                 // Use size info if available
                 long fileSize = info?.Formats?.FirstOrDefault()?.FileSize ?? 0;
@@ -264,8 +297,7 @@ namespace FluxGet
                             }
                             else
                             {
-                                // If no size info, convert percentage to bytes (estimated)
-                                task.DownloadedBytes = (long)(pct * 1024 * 1024); // Assume 1MB = 1%
+                                task.DownloadedBytes = (long)(pct * 1024 * 1024);
                             }
                             task.UpdatedAt = DateTime.UtcNow;
                         });
@@ -279,7 +311,6 @@ namespace FluxGet
                             await youTubeService.DownloadVideoByHeightAsync(url, outputPath, resolution, progress: progress);
                         }
                         
-                        // Download completed - update file size
                         if (File.Exists(outputPath))
                         {
                             var fileInfo = new FileInfo(outputPath);
@@ -327,18 +358,41 @@ namespace FluxGet
             return Services.GetRequiredService<T>();
         }
         
+        private static void TryDeleteFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to delete file {path}: {ex.Message}");
+            }
+        }
+        
         private async void OnMainWindowClosed(object sender, WindowEventArgs args)
         {
-            // Stop server when app closes
             try
             {
                 var browserExtension = Services.GetRequiredService<IBrowserExtensionService>();
                 await browserExtension.StopAsync();
-                
-                var logger = Services.GetRequiredService<ILogger<App>>();
-                logger.LogInformation("Browser extension server stopped");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error stopping browser extension: {ex.Message}");
+            }
+            
+            await DisposeAsync();
+        }
+        
+        public async ValueTask DisposeAsync()
+        {
+            if (_serviceProvider != null)
+            {
+                await _serviceProvider.DisposeAsync();
+                _serviceProvider = null;
+            }
         }
     }
 }

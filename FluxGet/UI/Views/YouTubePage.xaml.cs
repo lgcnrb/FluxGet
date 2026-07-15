@@ -1,3 +1,4 @@
+using FluxGet.Core.Helpers;
 using FluxGet.Core.Models;
 using FluxGet.Core.Services;
 using Microsoft.UI;
@@ -135,7 +136,10 @@ public sealed partial class YouTubePage : Page
                 {
                     ThumbnailImage.Source = new BitmapImage(new Uri(_videoInfo.ThumbnailUrl));
                 }
-                catch { }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to load thumbnail: {ex.Message}");
+                    }
             }
             
             // Collect all video formats
@@ -156,19 +160,19 @@ public sealed partial class YouTubePage : Page
             
             if (bestMergedMp4 != null)
             {
-                Mp4SizeText.Text = $"Approximately {FormatBytes(bestMergedMp4.FileSize)}";
+                Mp4SizeText.Text = $"Approximately {FileHelper.FormatBytes(bestMergedMp4.FileSize)}";
             }
             else
             {
                 var bestVideo = allVideoFormats.Where(f => f.Extension is "mp4" or "webm")
                     .OrderByDescending(f => f.FileSize).FirstOrDefault();
                 if (bestVideo != null && audioFormats.Any())
-                    Mp4SizeText.Text = $"Approximately {FormatBytes(bestVideo.FileSize + audioFormats[0].FileSize)}";
+                    Mp4SizeText.Text = $"Approximately {FileHelper.FormatBytes(bestVideo.FileSize + audioFormats[0].FileSize)}";
                 else
                     Mp4SizeText.Text = "";
             }
             
-            Mp3SizeText.Text = audioFormats.Any() ? $"Approximately {FormatBytes(audioFormats[0].FileSize)}" : "";
+            Mp3SizeText.Text = audioFormats.Any() ? $"Approximately {FileHelper.FormatBytes(audioFormats[0].FileSize)}" : "";
             
             // Fill resolutions
             ResolutionComboBox.Items.Clear();
@@ -214,7 +218,7 @@ public sealed partial class YouTubePage : Page
                 var suffix = hasMergedFormat ? "" : " (will be merged automatically)";
                 ResolutionComboBox.Items.Add(new ComboBoxItem
                 {
-                    Content = $"{height}p - {FormatBytes(estimatedSize)}{suffix}",
+                    Content = $"{height}p - {FileHelper.FormatBytes(estimatedSize)}{suffix}",
                     Tag = new ResolutionInfo { Height = height, HasMergedFormat = hasMergedFormat }
                 });
             }
@@ -307,7 +311,7 @@ public sealed partial class YouTubePage : Page
             if (bestAudio != null)
             {
                 SelectedSizeBadge.Visibility = Visibility.Visible;
-                SelectedSizeText.Text = FormatBytes(bestAudio.FileSize);
+                SelectedSizeText.Text = FileHelper.FormatBytes(bestAudio.FileSize);
             }
         }
     }
@@ -372,7 +376,7 @@ public sealed partial class YouTubePage : Page
         
         try
         {
-            var fileName = SanitizeFileName(_videoInfo.Title);
+            var fileName = FileHelper.SanitizeFileName(_videoInfo.Title);
             var outputPath = Path.Combine(_savePath, fileName);
             
             var progress = new Progress<double>(pct =>
@@ -480,28 +484,13 @@ public sealed partial class YouTubePage : Page
             if (File.Exists(ytdlpPath))
                 File.Delete(ytdlpPath);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Failed to delete yt-dlp: {ex.Message}");
+        }
         
         await FetchInfoAsync();
     }
-    
-    private static string SanitizeFileName(string name)
-    {
-        foreach (char c in Path.GetInvalidFileNameChars())
-        {
-            name = name.Replace(c, '_');
-        }
-        return name.Length > 100 ? name[..100] : name;
-    }
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        <= 0 => "Unknown",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
-    };
 }
 
 internal class ResolutionInfo

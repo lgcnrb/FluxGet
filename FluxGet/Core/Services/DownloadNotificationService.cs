@@ -22,7 +22,7 @@ public class DownloadNotificationService
                         <binding template="ToastGeneric">
                             <text>Download Completed</text>
                             <text>{EscapeXml(task.FileName)}</text>
-                            <text>{FormatBytes(task.FileSize)} - {EscapeXml(task.FilePath)}</text>
+                            <text>{Core.Helpers.FileHelper.FormatBytes(task.FileSize)} - {EscapeXml(task.FilePath)}</text>
                         </binding>
                     </visual>
                 </toast>
@@ -67,15 +67,6 @@ public class DownloadNotificationService
             _logger.LogWarning(ex, "Could not show notification: {FileName}", task.FileName);
         }
     }
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        0 => "0 B",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
-    };
     
     private static string EscapeXml(string input) => input
         .Replace("&", "&amp;")

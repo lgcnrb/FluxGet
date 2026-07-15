@@ -83,7 +83,10 @@ namespace FluxGet
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Clipboard check error: {ex.Message}");
+            }
         }
         
         private void ShowClipboardNotification(string url)

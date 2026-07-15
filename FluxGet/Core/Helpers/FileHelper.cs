@@ -26,10 +26,24 @@ public static class FileHelper
     
     public static string SanitizeFileName(string fileName)
     {
-        var invalidChars = Path.GetInvalidFileNameChars();
-        var sanitized = new string(fileName.Where(c => !invalidChars.Contains(c)).ToArray());
-        
-        return string.IsNullOrWhiteSpace(sanitized) ? "download" : sanitized;
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "download";
+
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            fileName = fileName.Replace(c, '_');
+        }
+
+        fileName = System.Text.RegularExpressions.Regex.Replace(fileName, "_+", "_");
+        fileName = fileName.Trim('.', ' ', '\t');
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            fileName = "download";
+
+        if (fileName.Length > 100)
+            fileName = fileName[..100];
+
+        return fileName;
     }
     
     public static async Task<long> GetFileSizeAsync(string filePath)
@@ -41,18 +55,20 @@ public static class FileHelper
         return fileInfo.Length;
     }
     
-    public static string FormatFileSize(long bytes)
+    public static string FormatBytes(long bytes) => bytes switch
     {
-        string[] sizes = ["B", "KB", "MB", "GB", "TB"];
-        double len = bytes;
-        int order = 0;
-        
-        while (len >= 1024 && order < sizes.Length - 1)
-        {
-            order++;
-            len /= 1024;
-        }
-        
-        return $"{len:0.##} {sizes[order]}";
-    }
+        <= 0 => "Unknown",
+        < 1024 => $"{bytes} B",
+        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
+        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
+        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
+    };
+    
+    public static string FormatSpeed(double bytesPerSecond) => bytesPerSecond switch
+    {
+        <= 0 => "0 B/s",
+        < 1024 => $"{bytesPerSecond:F0} B/s",
+        < 1024 * 1024 => $"{bytesPerSecond / 1024:F2} KB/s",
+        _ => $"{bytesPerSecond / (1024 * 1024):F2} MB/s"
+    };
 }

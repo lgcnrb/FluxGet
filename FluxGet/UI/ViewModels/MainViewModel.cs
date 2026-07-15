@@ -288,7 +288,7 @@ public partial class MainViewModel : ObservableObject
         {
             _downloadService.SetDownloadSpeedLimit(task.Id, limit);
             task.SpeedLimit = limit;
-            _logger.LogInformation("Speed limit set for {FileName}: {Limit}", task.FileName, FormatBytes(limit));
+            _logger.LogInformation("Speed limit set for {FileName}: {Limit}", task.FileName, Core.Helpers.FileHelper.FormatBytes(limit));
         }
     }
     
@@ -388,13 +388,4 @@ public partial class MainViewModel : ObservableObject
         PendingDownloads = Downloads.Count(t => t.Status == DownloadStatus.Pending);
         TotalSpeed = Downloads.Where(t => t.Status == DownloadStatus.Downloading).Sum(t => t.Speed);
     }
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        0 => "0 B",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
-    };
 }

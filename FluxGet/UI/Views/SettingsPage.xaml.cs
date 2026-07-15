@@ -81,31 +81,12 @@ public sealed partial class SettingsPage : Page
     private async void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         await _viewModel.SaveSettingsCommand.ExecuteAsync(null);
-        await ShowInfoDialog("Saved", "Settings saved successfully.");
+        await Core.Helpers.DialogHelper.ShowInfoAsync("Saved", "Settings saved successfully.");
     }
     
     private void ResetDefaultsButton_Click(object sender, RoutedEventArgs e)
     {
         _viewModel.ResetDefaultsCommand.Execute(null);
         UpdateSpeedLimitText();
-    }
-    
-    private async Task ShowInfoDialog(string title, string message)
-    {
-        try
-        {
-            await new ContentDialog
-            {
-                Title = title,
-                Content = message,
-                CloseButtonText = "OK",
-                XamlRoot = App.MainWindow.Content.XamlRoot,
-                Width = 400
-            }.ShowAsync();
-        }
-        catch
-        {
-            // Skip if dialog is already open or XamlRoot is invalid
-        }
     }
 }

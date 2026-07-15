@@ -136,7 +136,7 @@ public sealed partial class ToolsPage : Page
         
         if (!File.Exists(filePath))
         {
-            await ShowInfoDialog("Error", "Selected file not found.");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
             return;
         }
         
@@ -147,11 +147,11 @@ public sealed partial class ToolsPage : Page
         
         if (IsToolValid(filePath))
         {
-            await ShowInfoDialog("Success", $"yt-dlp path saved:\n{filePath}");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Success", $"yt-dlp path saved:\n{filePath}");
         }
         else
         {
-            await ShowInfoDialog("Warning", "File saved but could not be verified. You can still continue.");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
         }
     }
     
@@ -162,7 +162,7 @@ public sealed partial class ToolsPage : Page
         
         if (!File.Exists(filePath))
         {
-            await ShowInfoDialog("Error", "Selected file not found.");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", "Selected file not found.");
             return;
         }
         
@@ -173,11 +173,11 @@ public sealed partial class ToolsPage : Page
         
         if (IsToolValid(filePath))
         {
-            await ShowInfoDialog("Success", $"ffmpeg path saved:\n{filePath}");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Success", $"ffmpeg path saved:\n{filePath}");
         }
         else
         {
-            await ShowInfoDialog("Warning", "File saved but could not be verified. You can still continue.");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Warning", "File saved but could not be verified. You can still continue.");
         }
     }
     
@@ -216,23 +216,20 @@ public sealed partial class ToolsPage : Page
             
             if (string.IsNullOrEmpty(latestVersion))
             {
-                await ShowInfoDialog("Check", "Version info could not be retrieved from GitHub.");
+                await Core.Helpers.DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
             }
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("yt-dlp ", "").Replace("v", "")))
             {
-                await ShowInfoDialog("Up to date", $"yt-dlp is already up to date: {currentVersion}");
+                await Core.Helpers.DialogHelper.ShowInfoAsync("Up to date", $"yt-dlp is already up to date: {currentVersion}");
             }
             else
             {
-                var result = await new ContentDialog
-                {
-                    Title = "New Version Available",
-                    Content = $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
-                    PrimaryButtonText = "Download",
-                    CloseButtonText = "Cancel",
-                    XamlRoot = App.MainWindow.Content.XamlRoot,
-                    Width = 400
-                }.ShowAsync();
+                var result = await Core.Helpers.DialogHelper.ShowConfirmAsync(
+                    "New Version Available",
+                    $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
+                    "Download",
+                    "Cancel",
+                    400);
                 
                 if (result == ContentDialogResult.Primary)
                 {
@@ -242,7 +239,7 @@ public sealed partial class ToolsPage : Page
         }
         catch (Exception ex)
         {
-            await ShowInfoDialog("Error", $"Check error: {ex.Message}");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
         }
         finally
         {
@@ -276,23 +273,20 @@ public sealed partial class ToolsPage : Page
             
             if (string.IsNullOrEmpty(latestVersion))
             {
-                await ShowInfoDialog("Check", "Version info could not be retrieved from GitHub.");
+                await Core.Helpers.DialogHelper.ShowInfoAsync("Check", "Version info could not be retrieved from GitHub.");
             }
             else if (currentVersion != null && currentVersion.Contains(latestVersion.Replace("n", "")))
             {
-                await ShowInfoDialog("Up to date", $"ffmpeg is already up to date: {currentVersion}");
+                await Core.Helpers.DialogHelper.ShowInfoAsync("Up to date", $"ffmpeg is already up to date: {currentVersion}");
             }
             else
             {
-                var result = await new ContentDialog
-                {
-                    Title = "New Version Available",
-                    Content = $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
-                    PrimaryButtonText = "Download",
-                    CloseButtonText = "Cancel",
-                    XamlRoot = App.MainWindow.Content.XamlRoot,
-                    Width = 400
-                }.ShowAsync();
+                var result = await Core.Helpers.DialogHelper.ShowConfirmAsync(
+                    "New Version Available",
+                    $"Current version: {latestVersion}\nInstalled: {currentVersion ?? "Unknown"}\n\nWould you like to download from GitHub?",
+                    "Download",
+                    "Cancel",
+                    400);
                 
                 if (result == ContentDialogResult.Primary)
                 {
@@ -302,31 +296,12 @@ public sealed partial class ToolsPage : Page
         }
         catch (Exception ex)
         {
-            await ShowInfoDialog("Error", $"Check error: {ex.Message}");
+            await Core.Helpers.DialogHelper.ShowInfoAsync("Error", $"Check error: {ex.Message}");
         }
         finally
         {
             btn.IsEnabled = true;
             btn.Content = "Check for Update";
-        }
-    }
-    
-    private async Task ShowInfoDialog(string title, string message)
-    {
-        try
-        {
-            await new ContentDialog
-            {
-                Title = title,
-                Content = message,
-                CloseButtonText = "OK",
-                XamlRoot = App.MainWindow.Content.XamlRoot,
-                Width = 400
-            }.ShowAsync();
-        }
-        catch
-        {
-            // Skip if dialog is already open or XamlRoot is invalid
         }
     }
     

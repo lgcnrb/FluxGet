@@ -175,7 +175,7 @@ namespace FluxGet.UI.Views
                 var downloadService = App.GetService<IDownloadService>();
                 
                 var format = ytPage.SelectedFormat;
-                var outputPath = Path.Combine(ytPage.SavePath, SanitizeFileName(ytPage.VideoInfo?.Title ?? "youtube_video"));
+                var outputPath = Path.Combine(ytPage.SavePath, Core.Helpers.FileHelper.SanitizeFileName(ytPage.VideoInfo?.Title ?? "youtube_video"));
                 
                 try
                 {
@@ -205,26 +205,9 @@ namespace FluxGet.UI.Views
                 }
                 catch (Exception ex)
                 {
-                    var errorDialog = new ContentDialog
-                    {
-                        Title = "Download Error",
-                        Content = ex.Message,
-                        CloseButtonText = "OK",
-                        XamlRoot = App.MainWindow.Content.XamlRoot,
-                        Width = 400
-                    };
-                    await errorDialog.ShowAsync();
+                    await Core.Helpers.DialogHelper.ShowErrorAsync("Download Error", ex.Message);
                 }
             }
-        }
-        
-        private static string SanitizeFileName(string name)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                name = name.Replace(c, '_');
-            }
-            return name.Length > 100 ? name[..100] : name;
         }
         
         // ---- Filtering ----

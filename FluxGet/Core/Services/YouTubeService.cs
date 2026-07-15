@@ -19,19 +19,10 @@ public class YouTubeFormat
     
     public string DisplayName => Extension.ToUpper() switch
     {
-        "MP4" => $"MP4 - {Resolution} ({FormatBytes(FileSize)})",
-        "WEBM" => $"WebM - {Resolution} ({FormatBytes(FileSize)})",
-        "MP3" => $"MP3 - Audio Only ({FormatBytes(FileSize)})",
-        _ => $"{Extension.ToUpper()} - {Resolution} ({FormatBytes(FileSize)})"
-    };
-    
-    private static string FormatBytes(long bytes) => bytes switch
-    {
-        <= 0 => "Unknown",
-        < 1024 => $"{bytes} B",
-        < 1024 * 1024 => $"{bytes / 1024.0:F1} KB",
-        < 1024 * 1024 * 1024 => $"{bytes / (1024.0 * 1024):F1} MB",
-        _ => $"{bytes / (1024.0 * 1024 * 1024):F2} GB"
+        "MP4" => $"MP4 - {Resolution} ({Core.Helpers.FileHelper.FormatBytes(FileSize)})",
+        "WEBM" => $"WebM - {Resolution} ({Core.Helpers.FileHelper.FormatBytes(FileSize)})",
+        "MP3" => $"MP3 - Audio Only ({Core.Helpers.FileHelper.FormatBytes(FileSize)})",
+        _ => $"{Extension.ToUpper()} - {Resolution} ({Core.Helpers.FileHelper.FormatBytes(FileSize)})"
     };
 }
 
@@ -301,7 +292,10 @@ public class YouTubeService
         {
             ffmpegPath = await EnsureFfmpegAsync();
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ffmpeg not available: {ex.Message}");
+        }
         var hasFfmpeg = ffmpegPath != null && File.Exists(ffmpegPath);
         var ffmpegDir = hasFfmpeg ? Path.GetDirectoryName(ffmpegPath) : null;
         
@@ -448,6 +442,7 @@ public class YouTubeService
         }
         
         // Delete original file
-        try { if (File.Exists(inputPath) && inputPath != outputPath) File.Delete(inputPath); } catch { }
+        try { if (File.Exists(inputPath) && inputPath != outputPath) File.Delete(inputPath); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"Failed to delete temp file: {ex.Message}"); }
     }
 }
